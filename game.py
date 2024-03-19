@@ -19,6 +19,7 @@ from slider import Slider
 # todo: import sounds for sound effects like jumping, getting hit, dying etc...
 # todo: work on optimization
 # todo: add text for volume sliders
+# todo: add more todos if needed
 
 # todo: (Optional) create double jump
 # todo: (Optional) make more stuff for menu like more settings options etc...
