@@ -5,6 +5,8 @@ import csv
 from player import Player
 from camera import Camera
 from slider import Slider
+from transition import fade_from_black, fade_to_black
+
 
 # TODOS:
 
@@ -151,7 +153,9 @@ class Game:
             if level1.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
                     self.button_sound.play()
+                    fade_to_black(self.screen, fade_speed=5)
                     self.show_map("levels/level1.csv")
+                    fade_from_black(self.screen, fade_speed=5)
 
             if level2.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
@@ -293,7 +297,6 @@ class Game:
                     self.main_menu()
                     return
 
-    # todo: it should be a game_menu_loop class
     def create_game_menu(self):
 
         while True:
@@ -323,6 +326,10 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        return
 
             pygame.display.update()
 
@@ -356,35 +363,10 @@ class Game:
             new_x, new_y = self.apply_gravity()
 
             # Horizontal Collision Check
-            for row_index, row in enumerate(game_map):
-                for col_index, tile_id in enumerate(row):
-                    if tile_id not in non_coll_tiles:
-                        tile_rect = pygame.Rect(col_index * tile_size, row_index * tile_size, tile_size, tile_size)
-                        player_rect = pygame.Rect(new_x, self.player.y, self.player.width,
-                                                  self.player.height)  # Check horizontal movement first
-
-                        if player_rect.colliderect(tile_rect):
-                            if new_x > self.player.x:  # Moving right
-                                new_x = tile_rect.left - self.player.width
-                            elif new_x < self.player.x:  # Moving left
-                                new_x = tile_rect.right
+            new_x = self.check_horizontal_collision(game_map, new_x, non_coll_tiles, tile_size)
 
             # Vertical Collision Check
-            for row_index, row in enumerate(game_map):
-                for col_index, tile_id in enumerate(row):
-                    if tile_id not in non_coll_tiles:
-                        tile_rect = pygame.Rect(col_index * tile_size, row_index * tile_size, tile_size, tile_size)
-                        player_rect = pygame.Rect(self.player.x, new_y, self.player.width, self.player.height)
-
-                        if player_rect.colliderect(tile_rect):
-                            if new_y > self.player.y:  # Falling down
-                                new_y = tile_rect.top - self.player.height
-                                self.player.vertical_velocity = 0
-                                self.player.is_jumping = False
-                                self.player.can_jump = True
-                            elif new_y < self.player.y:  # Jumping up
-                                new_y = tile_rect.bottom
-                                self.player.vertical_velocity = 0
+            new_y = self.check_vertical_collision(game_map, new_y, non_coll_tiles, tile_size)
 
             self.player.update_position(new_x, new_y)
             self.camera.update(self.player)
@@ -400,6 +382,39 @@ class Game:
             self.player.draw(self.camera)
             pygame.display.update()
             clock.tick(60)
+
+    def check_horizontal_collision(self, game_map, new_x, non_coll_tiles, tile_size):
+        for row_index, row in enumerate(game_map):
+            for col_index, tile_id in enumerate(row):
+                if tile_id not in non_coll_tiles:
+                    tile_rect = pygame.Rect(col_index * tile_size, row_index * tile_size, tile_size, tile_size)
+                    player_rect = pygame.Rect(new_x, self.player.y, self.player.width,
+                                              self.player.height)  # Check horizontal movement first
+
+                    if player_rect.colliderect(tile_rect):
+                        if new_x > self.player.x:  # Moving right
+                            new_x = tile_rect.left - self.player.width
+                        elif new_x < self.player.x:  # Moving left
+                            new_x = tile_rect.right
+        return new_x
+
+    def check_vertical_collision(self, game_map, new_y, non_coll_tiles, tile_size):
+        for row_index, row in enumerate(game_map):
+            for col_index, tile_id in enumerate(row):
+                if tile_id not in non_coll_tiles:
+                    tile_rect = pygame.Rect(col_index * tile_size, row_index * tile_size, tile_size, tile_size)
+                    player_rect = pygame.Rect(self.player.x, new_y, self.player.width, self.player.height)
+
+                    if player_rect.colliderect(tile_rect):
+                        if new_y > self.player.y:  # Falling down
+                            new_y = tile_rect.top - self.player.height
+                            self.player.vertical_velocity = 0
+                            self.player.is_jumping = False
+                            self.player.can_jump = True
+                        elif new_y < self.player.y:  # Jumping up
+                            new_y = tile_rect.bottom
+                            self.player.vertical_velocity = 0
+        return new_y
 
     def apply_gravity(self):
         if not self.player.is_jumping or self.player.vertical_velocity > 0:
