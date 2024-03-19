@@ -6,24 +6,6 @@ from player import Player
 from camera import Camera
 from slider import Slider
 
-# TODOS:
-
-# todo: split up code into multiple smaller functions and refactor some functions into classes
-# todo: work on UI for example ENTER button as an option to get out of game_menu etc...
-# todo: import and work on enemies
-# todo: resize portal block, figure out how to import it as a 64X128 tile instead of 64X64, make it work as the level end transition to the next level
-# todo: create final layouts of all 3 levels
-# todo: create a level transition, from level to level, from menu to level, from level to menu
-# todo: use different music for gameplay than in menu
-# todo: create documentation with external program
-# todo: import sounds for sound effects like jumping, getting hit, dying etc...
-# todo: work on optimization
-# todo: add text for volume sliders
-
-# todo: (Optional) create double jump
-# todo: (Optional) make more stuff for menu like more settings options etc...
-# todo: (Optional) add visual effects like particles etc...
-
 
 class Game:
     def __init__(self):
