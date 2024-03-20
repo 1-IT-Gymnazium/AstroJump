@@ -30,6 +30,8 @@ class Player:
             # "player_fall": Animation(load_images("fall"))
         }
         self.current_animation = 'player_idle'
+        self.jump_sound = pygame.mixer.Sound("Sounds/jump_sound.mp3")
+        self.jump_sound.set_volume(0.2)
 
     def update_animation(self):
         if self.is_jumping:
@@ -61,6 +63,7 @@ class Player:
                 self.facing_right = True
             if event.key == pygame.K_SPACE:
                 if not self.is_jumping and self.can_jump:
+                    self.jump_sound.play()
                     self.is_jumping = True
                     self.can_jump = False
                     self.vertical_velocity = -self.jump_force

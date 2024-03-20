@@ -5,7 +5,6 @@ import csv
 from player import Player
 from camera import Camera
 from slider import Slider
-from transition import fade_from_black, fade_to_black
 
 
 # TODOS:
@@ -153,9 +152,8 @@ class Game:
             if level1.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
                     self.button_sound.play()
-                    fade_to_black(self.screen, fade_speed=5)
+                    pygame.mixer.music.stop()
                     self.show_map("levels/level1.csv")
-                    fade_from_black(self.screen, fade_speed=5)
 
             if level2.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
@@ -303,14 +301,17 @@ class Game:
             mx, my = pygame.mouse.get_pos()
 
             resume_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 400, button_width, button_height)
+            settings_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 500, button_width, button_height)
             quit_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 600, button_width, button_height)
 
             resume_hovered = resume_button.collidepoint((mx, my))
             quit_hovered = quit_button.collidepoint((mx, my))
+            settings_hovered = settings_button.collidepoint((mx, my))
 
             self.screen.fill((0, 0, 0))
             self.draw_button("Resume", resume_button, self.hover_color if resume_hovered else self.button_color)
             self.draw_button("Quit", quit_button, self.quit_button_hover_color if quit_hovered else self.quit_button_color)
+            self.draw_button("Settings", settings_button, self.hover_color if settings_hovered else self.button_color)
 
             if resume_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
@@ -321,6 +322,11 @@ class Game:
                 if pygame.mouse.get_pressed()[0]:
                     self.button_sound.play()
                     self.main_menu()
+
+            if settings_button.collidepoint((mx, my)):
+                if pygame.mouse.get_pressed()[0]:
+                    self.button_sound.play()
+                    self.settings()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
