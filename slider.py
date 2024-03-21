@@ -11,8 +11,8 @@ class Slider:
         self.dragging = False
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (200, 200, 200), self.rect, border_radius=15)
-        pygame.draw.rect(screen, (150, 150, 150), self.handle_rect, border_radius=15)
+        pygame.draw.rect(screen, (200, 200, 200), self.rect, border_radius=30)
+        pygame.draw.rect(screen, (150, 150, 150), self.handle_rect, border_radius=30)
 
     def handle_event(self, event, mx, my):
         if event.type == pygame.MOUSEBUTTONDOWN:

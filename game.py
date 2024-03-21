@@ -17,10 +17,8 @@ from slider import Slider
 # todo: create a level transition, from level to level, from menu to level, from level to menu
 # todo: use different music for gameplay than in menu
 # todo: create documentation with external program
-# todo: import sounds for sound effects like jumping, getting hit, dying etc...
+# todo: import sounds for sound effects like jumping, getting hit, dying etc... (jumping sound already added)
 # todo: work on optimization
-# todo: add text for volume sliders
-# todo: add more todos if needed
 
 # todo: (Optional) create double jump
 # todo: (Optional) make more stuff for menu like more settings options etc...
@@ -52,7 +50,7 @@ class Game:
 
         # sliders
         self.sfx_slider = Slider(810, 400, 300, 40, 0, 1, 0.5)
-        self.music_slider = Slider(810, 500, 300, 40, 0, 1, 0.5)
+        self.music_slider = Slider(810, 700, 300, 40, 0, 1, 0.5)
 
         # fonts
         self.font_custom = pygame.font.Font("Graphics/fonts/pixel_font.ttf", 50)
@@ -234,8 +232,9 @@ class Game:
             return_hovered = return_button.collidepoint((mx, my))
 
             self.draw_button("Return", return_button, self.hover_color if return_hovered else self.button_color)
-
             self.draw_text("Settings", self.font_custom, self.white, WINDOW_WIDTH // 2, 175)
+            self.draw_text("SFX volume", self.font_custom, self.white, WINDOW_WIDTH // 2, 350)
+            self.draw_text("Music volume", self.font_custom, self.white, WINDOW_WIDTH // 2, 650)
 
             self.sfx_slider.draw(self.screen)
             self.music_slider.draw(self.screen)
