@@ -98,3 +98,5 @@ class Player:
         self.x = new_x
         self.y = new_y
         self.rect = pygame.Rect(new_x, new_y, self.width, self.height)
+
+

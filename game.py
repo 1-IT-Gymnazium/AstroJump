@@ -15,7 +15,6 @@ from slider import Slider
 # todo: resize portal block, figure out how to import it as a 64X128 tile instead of 64X64, make it work as the level end transition to the next level
 # todo: create final layouts of all 3 levels
 # todo: create a level transition, from level to level, from menu to level, from level to menu
-# todo: use different music for gameplay than in menu
 # todo: create documentation with external program
 # todo: import sounds for sound effects like jumping, getting hit, dying etc... (jumping sound already added)
 # todo: work on optimization
@@ -57,9 +56,11 @@ class Game:
 
         # sounds
         self.button_sound = pygame.mixer.Sound("Sounds/button_sound3.mp3")
-        self.bg_music = "Sounds/BG_music2.mp3"
+        self.bg_music = "Sounds/BG_music.mp3"
+        self.bg_level_music = "Sounds/level_bg_music1.mp3"
         pygame.mixer.music.load(self.bg_music)
         pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.1)
 
     def draw_text(self, text, font, color, x, y):
         text_obj = font.render(text, True, color)
@@ -150,7 +151,8 @@ class Game:
             if level1.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
                     self.button_sound.play()
-                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load(self.bg_level_music)
+                    pygame.mixer.music.play(-1)
                     self.show_map("levels/level1.csv")
 
             if level2.collidepoint((mx, my)):
@@ -294,7 +296,7 @@ class Game:
                     self.main_menu()
                     return
 
-    def create_game_menu(self):
+    def show_game_menu(self):
 
         while True:
             mx, my = pygame.mouse.get_pos()
@@ -320,6 +322,8 @@ class Game:
             if quit_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
                     self.button_sound.play()
+                    pygame.mixer.music.load(self.bg_music)
+                    pygame.mixer.music.play(-1)
                     self.main_menu()
 
             if settings_button.collidepoint((mx, my)):
@@ -434,4 +438,4 @@ class Game:
             sys.exit()
         self.player.handle_event(event)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            self.create_game_menu()
+            self.show_game_menu()

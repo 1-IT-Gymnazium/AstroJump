@@ -24,5 +24,4 @@ class Slider:
 
         elif event.type == pygame.MOUSEMOTION and self.dragging:
             self.handle_rect.x = max(self.rect.x, min(mx, self.rect.x + self.rect.width - self.handle_rect.width))
-            self.value = self.min_val + (self.max_val - self.min_val) * (
-                        (self.handle_rect.x - self.rect.x) / self.rect.width)
+            self.value = self.min_val + (self.max_val - self.min_val) * ((self.handle_rect.x - self.rect.x) / self.rect.width)
