@@ -5,7 +5,7 @@ import csv
 from player import Player
 from camera import Camera
 from slider import Slider
-
+from transition import circular_fade
 
 # TODOS:
 
@@ -151,6 +151,7 @@ class Game:
             if level1.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
                     self.button_sound.play()
+                    circular_fade(self.screen, 'out')
                     pygame.mixer.music.load(self.bg_level_music)
                     pygame.mixer.music.play(-1)
                     self.show_map("levels/level1.csv")
@@ -309,7 +310,8 @@ class Game:
             quit_hovered = quit_button.collidepoint((mx, my))
             settings_hovered = settings_button.collidepoint((mx, my))
 
-            self.screen.fill((0, 0, 0))
+            tutorial_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
+            self.screen.blit(tutorial_bg, (0, 0))
             self.draw_button("Resume", resume_button, self.hover_color if resume_hovered else self.button_color)
             self.draw_button("Quit", quit_button, self.quit_button_hover_color if quit_hovered else self.quit_button_color)
             self.draw_button("Settings", settings_button, self.hover_color if settings_hovered else self.button_color)
@@ -324,6 +326,7 @@ class Game:
                     self.button_sound.play()
                     pygame.mixer.music.load(self.bg_music)
                     pygame.mixer.music.play(-1)
+                    circular_fade(self.screen, 'out')
                     self.main_menu()
 
             if settings_button.collidepoint((mx, my)):
