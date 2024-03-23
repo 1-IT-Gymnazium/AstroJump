@@ -14,7 +14,6 @@ from transition import circular_fade
 # todo: import and work on enemies
 # todo: resize portal block, figure out how to import it as a 64X128 tile instead of 64X64, make it work as the level end transition to the next level
 # todo: create final layouts of all 3 levels
-# todo: create a level transition, from level to level, from menu to level, from level to menu
 # todo: create documentation with external program
 # todo: import sounds for sound effects like jumping, getting hit, dying etc... (jumping sound already added)
 # todo: work on optimization
@@ -63,8 +62,7 @@ class Game:
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
 
-        self.current_level = 1
-        self.level_transition = False
+        self.current_level = None
 
     def draw_text(self, text, font, color, x, y):
         text_obj = font.render(text, True, color)
@@ -287,18 +285,12 @@ class Game:
 
             if respawn_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
-                    self.player.x = self.player.initial_x
-                    self.player.y = self.player.initial_y
-                    self.player.vertical_velocity = 0
-                    self.player.is_jumping = False
+                    self.player.reset_position()
                     self.button_sound.play()
 
             if main_menu_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
-                    self.player.x = self.player.initial_x
-                    self.player.y = self.player.initial_y
-                    self.player.vertical_velocity = 0
-                    self.player.is_jumping = False
+                    self.player.reset_position()
                     self.button_sound.play()
                     self.main_menu()
                     return
@@ -329,10 +321,11 @@ class Game:
 
             if quit_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
+                    self.player.reset_position()
                     self.button_sound.play()
                     pygame.mixer.music.load(self.bg_music)
                     pygame.mixer.music.play(-1)
-                    circular_fade(self.screen, 'out')
+                    circular_fade(self.screen, "out")
                     self.main_menu()
 
             if settings_button.collidepoint((mx, my)):
@@ -351,11 +344,18 @@ class Game:
 
             pygame.display.update()
 
+    def transition_next_level(self, next_level_filename):
+
+        self.player.reset_position()
+        self.current_level = next_level_filename
+        circular_fade(self.screen, "out")
+        self.show_map(next_level_filename)
+
     def show_map(self, map_filename=None):
 
         non_coll_tiles = [0]
-        if map_filename is None:
-            map_filename = "levels/level1.csv"
+        if map_filename is not None:
+            self.current_level = map_filename
 
             # Load the map from the CSV file
         game_map = []
@@ -377,6 +377,11 @@ class Game:
             for event in pygame.event.get():
                 self.handle_event(event)
 
+            if self.player.x > 4864 and self.current_level == "levels/level1.csv":
+                next_level_filename = "levels/level2.csv"  # Specify the next level filename
+                self.transition_next_level(next_level_filename)
+                return
+
             # Apply gravity
             new_x, new_y = self.apply_gravity()
 
@@ -389,17 +394,20 @@ class Game:
             self.player.update_position(new_x, new_y)
             self.camera.update(self.player)
 
-            for row_index, row in enumerate(game_map):
-                for col_index, tile_id in enumerate(row):
-                    if tile_id not in non_coll_tiles:
-                        tile_image = self.tile_images[tile_id]
-                        tile_rect = pygame.Rect(col_index * TILE_SIZE, row_index * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-                        self.screen.blit(tile_image, self.camera.apply(tile_rect))
+            self.draw_map(game_map, non_coll_tiles)
 
             self.respawn()
             self.player.draw(self.camera)
             pygame.display.update()
             clock.tick(60)
+
+    def draw_map(self, game_map, non_coll_tiles):
+        for row_index, row in enumerate(game_map):
+            for col_index, tile_id in enumerate(row):
+                if tile_id not in non_coll_tiles:
+                    tile_image = self.tile_images[tile_id]
+                    tile_rect = pygame.Rect(col_index * TILE_SIZE, row_index * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                    self.screen.blit(tile_image, self.camera.apply(tile_rect))
 
     def check_horizontal_collision(self, game_map, new_x, non_coll_tiles, tile_size):
         for row_index, row in enumerate(game_map):
@@ -449,20 +457,5 @@ class Game:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.show_game_menu()
 
-    def next_level(self):
-
-        if self.player.x >= 4882 and self.current_level == 1:
-            self.current_level += 1  # Go to the next level
-            self.level_transition = True
-
-    def idk(self):
-        while self.show_map():
-            self.handle_event()
-
-        if not self.level_transition:
-            circular_fade("out")
-            if self.current_level == 2:
-                self.show_map("levels/level2.csv")
-                self.level_transition = False
 
 

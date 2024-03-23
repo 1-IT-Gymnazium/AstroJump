@@ -99,4 +99,13 @@ class Player:
         self.y = new_y
         self.rect = pygame.Rect(new_x, new_y, self.width, self.height)
 
+    def reset_position(self):
+        self.x = self.initial_x
+        self.y = self.initial_y
+        self.vertical_velocity = 0
+        self.is_jumping = False
+        self.can_jump = True
+        self.rect.x = self.x
+        self.rect.y = self.y
+
 

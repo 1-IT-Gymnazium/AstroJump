@@ -1,12 +1,12 @@
 import pygame
 
 
-def circular_fade(screen, mode='in', duration=500, max_radius=None, border_color=(255, 255, 255), border_thickness=15):
+def circular_fade(screen, mode="in", duration=500, max_radius=None, border_color=(255, 255, 255), border_thickness=15):
     if max_radius is None:
         max_radius = int((screen.get_width() ** 2 + screen.get_height() ** 2) ** 0.5)
     clock = pygame.time.Clock()
 
-    if mode == 'out':
+    if mode == "out" or mode == "both":
         for alpha in range(0, 255, 3):
             fade_surface = pygame.Surface((screen.get_width(), screen.get_height()), pygame.SRCALPHA)
             current_radius = int(max_radius * (alpha / 255))
@@ -27,13 +27,13 @@ def circular_fade(screen, mode='in', duration=500, max_radius=None, border_color
         if progress >= 1:
             break
 
-        if mode == 'out':
+        if mode == "out":
             radius = int(max_radius * progress)
         else:  # Fade in
             radius = int(max_radius * (1 - progress))
 
         fade_surface = screen.copy()
-        alpha = 255 * (1 - progress) if mode == 'out' else 255 * progress
+        alpha = 255 * (1 - progress) if mode == "out" else 255 * progress
         fade_surface.fill((0, 0, 0))
         fade_surface.set_alpha(alpha)
 
