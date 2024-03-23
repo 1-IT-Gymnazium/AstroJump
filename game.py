@@ -18,6 +18,7 @@ from transition import circular_fade
 # todo: create documentation with external program
 # todo: import sounds for sound effects like jumping, getting hit, dying etc... (jumping sound already added)
 # todo: work on optimization
+# todo: fix player transparent glasses drawing issue
 
 # todo: (Optional) create double jump
 # todo: (Optional) make more stuff for menu like more settings options etc...
@@ -61,6 +62,9 @@ class Game:
         pygame.mixer.music.load(self.bg_music)
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
+
+        self.current_level = 1
+        self.level_transition = False
 
     def draw_text(self, text, font, color, x, y):
         text_obj = font.render(text, True, color)
@@ -159,8 +163,10 @@ class Game:
             if level2.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
                     self.button_sound.play()
-                    print("Level 2 Selected")
-                    return 2
+                    circular_fade(self.screen, 'out')
+                    pygame.mixer.music.load(self.bg_level_music)
+                    pygame.mixer.music.play(-1)
+                    self.show_map("levels/level2.csv")
 
             if level3.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
@@ -442,3 +448,21 @@ class Game:
         self.player.handle_event(event)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.show_game_menu()
+
+    def next_level(self):
+
+        if self.player.x >= 4882 and self.current_level == 1:
+            self.current_level += 1  # Go to the next level
+            self.level_transition = True
+
+    def idk(self):
+        while self.show_map():
+            self.handle_event()
+
+        if not self.level_transition:
+            circular_fade("out")
+            if self.current_level == 2:
+                self.show_map("levels/level2.csv")
+                self.level_transition = False
+
+

@@ -24,7 +24,8 @@ def circular_fade(screen, mode='in', duration=500, max_radius=None, border_color
     while True:
         elapsed = pygame.time.get_ticks() - start_time
         progress = elapsed / duration
-        if progress >= 1: break
+        if progress >= 1:
+            break
 
         if mode == 'out':
             radius = int(max_radius * progress)
