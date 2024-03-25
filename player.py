@@ -1,5 +1,5 @@
 import pygame
-from settings import player_speed, jump_force, gravity, vertical_velocity
+from settings import player_speed, JUMP_FORCE, GRAVITY, VERTICAL_VELOCITY
 from animation import load_images, Animation
 
 
@@ -18,9 +18,9 @@ class Player:
         self.is_jumping = False
         # self.is_falling = False
         self.can_jump = True
-        self.jump_force = jump_force
-        self.gravity = gravity
-        self.vertical_velocity = vertical_velocity
+        self.jump_force = JUMP_FORCE
+        self.gravity = GRAVITY
+        self.vertical_velocity = VERTICAL_VELOCITY
         self.rect = pygame.Rect(x, y, width, height)
         self.facing_right = True
         self.assets = {

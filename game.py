@@ -6,6 +6,8 @@ from player import Player
 from camera import Camera
 from slider import Slider
 from transition import circular_fade
+from enemy import Spike
+
 
 # TODOS:
 
@@ -64,6 +66,10 @@ class Game:
 
         self.current_level = None
 
+        # enemies
+        spikes_image = pygame.image.load("Graphics/spikes/15.png")
+        self.spikes = Spike(500, 366, 64, 18, spikes_image)
+
     def draw_text(self, text, font, color, x, y):
         text_obj = font.render(text, True, color)
         text_rect = text_obj.get_rect(center=(x, y))
@@ -84,10 +90,10 @@ class Game:
 
             mx, my = pygame.mouse.get_pos()
 
-            play_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 400, button_width, button_height)
-            tutorial_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 500, button_width, button_height)
-            settings_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 600, button_width, button_height)
-            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 700, button_width, button_height)
+            play_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT)
+            tutorial_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 500, BUTTON_WIDTH, BUTTON_HEIGHT)
+            settings_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH, BUTTON_HEIGHT)
+            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 700, BUTTON_WIDTH, BUTTON_HEIGHT)
 
             play_hovered = play_button.collidepoint((mx, my))
             tutorial_hovered = tutorial_button.collidepoint((mx, my))
@@ -135,10 +141,10 @@ class Game:
 
             mx, my = pygame.mouse.get_pos()
 
-            return_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 800, button_width, button_height)
-            level1 = pygame.Rect((WINDOW_WIDTH - 3 * button_width - 2 * button_gap) // 2, 250, button_width, button_height)
-            level2 = pygame.Rect(level1.right + button_gap, 250, button_width, button_height)
-            level3 = pygame.Rect(level2.right + button_gap, 250, button_width, button_height)
+            return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 800, BUTTON_WIDTH, BUTTON_HEIGHT)
+            level1 = pygame.Rect((WINDOW_WIDTH - 3 * BUTTON_WIDTH - 2 * BUTTON_GAP) // 2, 250, BUTTON_WIDTH, BUTTON_HEIGHT)
+            level2 = pygame.Rect(level1.right + BUTTON_GAP, 250, BUTTON_WIDTH, BUTTON_HEIGHT)
+            level3 = pygame.Rect(level2.right + BUTTON_GAP, 250, BUTTON_WIDTH, BUTTON_HEIGHT)
 
             return_hovered = return_button.collidepoint((mx, my))
             level1_hovered = level1.collidepoint((mx, my))
@@ -195,7 +201,7 @@ class Game:
 
             mx, my = pygame.mouse.get_pos()
 
-            return_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 900, button_width, button_height)
+            return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 900, BUTTON_WIDTH, BUTTON_HEIGHT)
             page1 = pygame.Rect(250, 300, 500, 400)
             page2 = pygame.Rect(1170, 300, 500, 400)
 
@@ -234,7 +240,7 @@ class Game:
 
             mx, my = pygame.mouse.get_pos()
 
-            return_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 900, button_width, button_height)
+            return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 900, BUTTON_WIDTH, BUTTON_HEIGHT)
 
             return_hovered = return_button.collidepoint((mx, my))
 
@@ -270,8 +276,8 @@ class Game:
             pygame.display.update()
 
     def respawn(self):
-        main_menu_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2 - 20, 500, 300, button_height)
-        respawn_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 400, button_width, button_height)
+        main_menu_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2 - 20, 500, 300, BUTTON_HEIGHT)
+        respawn_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT)
 
         mx, my = pygame.mouse.get_pos()
         main_menu_hovered = main_menu_button.collidepoint((mx, my))
@@ -300,9 +306,9 @@ class Game:
         while True:
             mx, my = pygame.mouse.get_pos()
 
-            resume_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 400, button_width, button_height)
-            settings_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 500, button_width, button_height)
-            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - button_width // 2, 600, button_width, button_height)
+            resume_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT)
+            settings_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 500, BUTTON_WIDTH, BUTTON_HEIGHT)
+            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH, BUTTON_HEIGHT)
 
             resume_hovered = resume_button.collidepoint((mx, my))
             quit_hovered = quit_button.collidepoint((mx, my))
@@ -382,6 +388,9 @@ class Game:
                 self.transition_next_level(next_level_filename)
                 return
 
+            if self.player.rect.colliderect(self.spikes.rect):
+                self.player.reset_position()
+
             # Apply gravity
             new_x, new_y = self.apply_gravity()
 
@@ -396,6 +405,7 @@ class Game:
 
             self.draw_map(game_map, non_coll_tiles)
 
+            self.spikes.draw(self.screen, self.camera)
             self.respawn()
             self.player.draw(self.camera)
             pygame.display.update()
@@ -456,6 +466,3 @@ class Game:
         self.player.handle_event(event)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.show_game_menu()
-
-
-

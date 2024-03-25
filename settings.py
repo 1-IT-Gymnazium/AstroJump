@@ -1,15 +1,15 @@
 WINDOW_WIDTH = 1920
 WINDOW_HEIGHT = 1080
-button_width = 260
-button_height = 75
-button_gap = 50
-player_speed = 6
+BUTTON_WIDTH = 260
+BUTTON_HEIGHT = 75
+BUTTON_GAP = 50
+PLAYER_SPEED = 6
 TILE_SIZE = 64
-jump_force = 14
-gravity = 0.7
-vertical_velocity = 0
+JUMP_FORCE = 14
+GRAVITY = 0.7
+VERTICAL_VELOCITY = 0
 MAP_WIDTH = 5000
 MAP_HEIGHT = 1080
 PLAYER_START_X = 100
 PLAYER_START_Y = 100
-player_colour = (0, 0, 200)
+
