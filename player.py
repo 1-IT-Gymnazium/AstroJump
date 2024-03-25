@@ -1,5 +1,5 @@
 import pygame
-from settings import player_speed, JUMP_FORCE, GRAVITY, VERTICAL_VELOCITY
+from settings import PLAYER_SPEED, JUMP_FORCE, GRAVITY, VERTICAL_VELOCITY
 from animation import load_images, Animation
 
 
@@ -12,7 +12,7 @@ class Player:
         self.width = width
         self.height = height
         self.screen = screen
-        self.speed = player_speed
+        self.speed = PLAYER_SPEED
         self.move_left = False
         self.move_right = False
         self.is_jumping = False

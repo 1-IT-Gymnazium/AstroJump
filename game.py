@@ -6,7 +6,6 @@ from player import Player
 from camera import Camera
 from slider import Slider
 from transition import circular_fade
-from enemy import Spike
 
 
 # TODOS:
@@ -32,7 +31,7 @@ class Game:
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("AstroJump")
 
-        num_tiles = 15
+        num_tiles = 16
         self.tile_images = [pygame.image.load(f'Graphics/tiles/{i}.png') for i in range(num_tiles)]
 
         # colors
@@ -67,8 +66,7 @@ class Game:
         self.current_level = None
 
         # enemies
-        spikes_image = pygame.image.load("Graphics/spikes/15.png")
-        self.spikes = Spike(500, 366, 64, 18, spikes_image)
+        self.spikes = []
 
     def draw_text(self, text, font, color, x, y):
         text_obj = font.render(text, True, color)
@@ -370,7 +368,6 @@ class Game:
             for row in reader:
                 game_map.append([int(tile_id) for tile_id in row])
 
-        tile_size = 64
         clock = pygame.time.Clock()
         self.camera = Camera(MAP_WIDTH, MAP_HEIGHT)
 
@@ -388,24 +385,19 @@ class Game:
                 self.transition_next_level(next_level_filename)
                 return
 
-            if self.player.rect.colliderect(self.spikes.rect):
-                self.player.reset_position()
-
             # Apply gravity
             new_x, new_y = self.apply_gravity()
 
             # Horizontal Collision Check
-            new_x = self.check_horizontal_collision(game_map, new_x, non_coll_tiles, tile_size)
+            new_x = self.check_horizontal_collision(game_map, new_x, non_coll_tiles)
 
             # Vertical Collision Check
-            new_y = self.check_vertical_collision(game_map, new_y, non_coll_tiles, tile_size)
+            new_y = self.check_vertical_collision(game_map, new_y, non_coll_tiles)
 
             self.player.update_position(new_x, new_y)
             self.camera.update(self.player)
 
             self.draw_map(game_map, non_coll_tiles)
-
-            self.spikes.draw(self.screen, self.camera)
             self.respawn()
             self.player.draw(self.camera)
             pygame.display.update()
@@ -416,16 +408,24 @@ class Game:
             for col_index, tile_id in enumerate(row):
                 if tile_id not in non_coll_tiles:
                     tile_image = self.tile_images[tile_id]
-                    tile_rect = pygame.Rect(col_index * TILE_SIZE, row_index * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                    if tile_id == 15:
+                        y_offset = TILE_HEIGHT - SPIKE_HEIGHT
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + y_offset, SPIKE_WIDTH, SPIKE_HEIGHT)
+                    else:
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT)
+
                     self.screen.blit(tile_image, self.camera.apply(tile_rect))
 
-    def check_horizontal_collision(self, game_map, new_x, non_coll_tiles, tile_size):
+    def check_horizontal_collision(self, game_map, new_x, non_coll_tiles):
         for row_index, row in enumerate(game_map):
             for col_index, tile_id in enumerate(row):
                 if tile_id not in non_coll_tiles:
-                    tile_rect = pygame.Rect(col_index * tile_size, row_index * tile_size, tile_size, tile_size)
-                    player_rect = pygame.Rect(new_x, self.player.y, self.player.width,
-                                              self.player.height)  # Check horizontal movement first
+                    if tile_id == 15:
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
+                    else:
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT)
+
+                    player_rect = pygame.Rect(new_x, self.player.y, self.player.width, self.player.height)
 
                     if player_rect.colliderect(tile_rect):
                         if new_x > self.player.x:  # Moving right
@@ -434,11 +434,15 @@ class Game:
                             new_x = tile_rect.right
         return new_x
 
-    def check_vertical_collision(self, game_map, new_y, non_coll_tiles, tile_size):
+    def check_vertical_collision(self, game_map, new_y, non_coll_tiles):
         for row_index, row in enumerate(game_map):
             for col_index, tile_id in enumerate(row):
                 if tile_id not in non_coll_tiles:
-                    tile_rect = pygame.Rect(col_index * tile_size, row_index * tile_size, tile_size, tile_size)
+                    if tile_id == 15:
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
+                    else:
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT)
+
                     player_rect = pygame.Rect(self.player.x, new_y, self.player.width, self.player.height)
 
                     if player_rect.colliderect(tile_rect):
@@ -449,7 +453,7 @@ class Game:
                             self.player.can_jump = True
                         elif new_y < self.player.y:  # Jumping up
                             new_y = tile_rect.bottom
-                            self.player.vertical_velocity = 0
+
         return new_y
 
     def apply_gravity(self):
