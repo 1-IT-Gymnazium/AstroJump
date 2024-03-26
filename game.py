@@ -306,24 +306,27 @@ class Game:
 
             resume_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT)
             settings_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 500, BUTTON_WIDTH, BUTTON_HEIGHT)
-            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH, BUTTON_HEIGHT)
+            main_menu_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH, BUTTON_HEIGHT)
+            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 700, BUTTON_WIDTH, BUTTON_HEIGHT)
 
             resume_hovered = resume_button.collidepoint((mx, my))
             quit_hovered = quit_button.collidepoint((mx, my))
             settings_hovered = settings_button.collidepoint((mx, my))
+            main_menu_hovered = main_menu_button.collidepoint((mx, my))
 
             tutorial_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
             self.screen.blit(tutorial_bg, (0, 0))
             self.draw_button("Resume", resume_button, self.hover_color if resume_hovered else self.button_color)
             self.draw_button("Quit", quit_button, self.quit_button_hover_color if quit_hovered else self.quit_button_color)
             self.draw_button("Settings", settings_button, self.hover_color if settings_hovered else self.button_color)
+            self.draw_button("Menu", main_menu_button, self.hover_color if main_menu_hovered else self.button_color)
 
             if resume_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
                     self.button_sound.play()
                     return
 
-            if quit_button.collidepoint((mx, my)):
+            if main_menu_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
                     self.player.reset_position()
                     self.button_sound.play()
@@ -336,6 +339,11 @@ class Game:
                 if pygame.mouse.get_pressed()[0]:
                     self.button_sound.play()
                     self.settings()
+
+            if quit_button.collidepoint((mx, my)):
+                if pygame.mouse.get_pressed()[0]:
+                    pygame.quit()
+                    sys.exit()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -395,10 +403,10 @@ class Game:
             new_y = self.check_vertical_collision(game_map, new_y, non_coll_tiles)
 
             self.player.update_position(new_x, new_y)
-            self.camera.update(self.player)
             self.draw_map(game_map, non_coll_tiles)
             self.respawn()
             self.player.draw(self.camera)
+            self.camera.update(self.player)
             pygame.display.update()
             clock.tick(60)
 
@@ -428,7 +436,10 @@ class Game:
 
                     if player_rect.colliderect(tile_rect):
                         if tile_id == 15:
+                            print("coliding")
                             self.player.reset_position()
+                            self.camera.update(self.player)
+                            self.player.position_was_reset = True
                         if new_x > self.player.x:  # Moving right
                             new_x = tile_rect.left - self.player.width
                         elif new_x < self.player.x:  # Moving left
@@ -449,7 +460,10 @@ class Game:
 
                     if player_rect.colliderect(tile_rect):
                         if tile_id == 15:
+                            print("coliding")
                             self.player.reset_position()
+                            self.camera.update(self.player)
+                            self.player.position_was_reset = True
                         if new_y > self.player.y:  # Falling down
                             new_y = tile_rect.top - self.player.height
                             self.player.vertical_velocity = 0

@@ -5,10 +5,10 @@ from animation import load_images, Animation
 
 class Player:
     def __init__(self, x, y, width, height, screen):
-        self.x = x
-        self.y = y
         self.initial_x = x
         self.initial_y = y
+        self.x = x
+        self.y = y
         self.width = width
         self.height = height
         self.screen = screen
@@ -32,6 +32,7 @@ class Player:
         self.current_animation = 'player_idle'
         self.jump_sound = pygame.mixer.Sound("Sounds/jump_sound.mp3")
         self.jump_sound.set_volume(0.2)
+        self.position_was_reset = False
 
     def update_animation(self):
         if self.is_jumping:
@@ -95,11 +96,13 @@ class Player:
         return new_x, new_y
 
     def update_position(self, new_x, new_y):
-        self.x = new_x
-        self.y = new_y
-        self.rect = pygame.Rect(new_x, new_y, self.width, self.height)
+        if not self.position_was_reset:
+            self.x = new_x
+            self.y = new_y
+            self.rect = pygame.Rect(new_x, new_y, self.width, self.height)
 
     def reset_position(self):
+        print("resetting")
         self.x = self.initial_x
         self.y = self.initial_y
         self.vertical_velocity = 0
@@ -109,6 +112,7 @@ class Player:
         self.rect.y = self.y
         self.move_left = False
         self.move_right = False
+
 
 
 
