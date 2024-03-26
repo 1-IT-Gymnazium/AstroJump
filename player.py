@@ -107,5 +107,8 @@ class Player:
         self.can_jump = True
         self.rect.x = self.x
         self.rect.y = self.y
+        self.move_left = False
+        self.move_right = False
+
 
 

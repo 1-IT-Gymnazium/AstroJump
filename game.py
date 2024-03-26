@@ -396,7 +396,6 @@ class Game:
 
             self.player.update_position(new_x, new_y)
             self.camera.update(self.player)
-
             self.draw_map(game_map, non_coll_tiles)
             self.respawn()
             self.player.draw(self.camera)
@@ -428,10 +427,13 @@ class Game:
                     player_rect = pygame.Rect(new_x, self.player.y, self.player.width, self.player.height)
 
                     if player_rect.colliderect(tile_rect):
+                        if tile_id == 15:
+                            self.player.reset_position()
                         if new_x > self.player.x:  # Moving right
                             new_x = tile_rect.left - self.player.width
                         elif new_x < self.player.x:  # Moving left
                             new_x = tile_rect.right
+
         return new_x
 
     def check_vertical_collision(self, game_map, new_y, non_coll_tiles):
@@ -446,6 +448,8 @@ class Game:
                     player_rect = pygame.Rect(self.player.x, new_y, self.player.width, self.player.height)
 
                     if player_rect.colliderect(tile_rect):
+                        if tile_id == 15:
+                            self.player.reset_position()
                         if new_y > self.player.y:  # Falling down
                             new_y = tile_rect.top - self.player.height
                             self.player.vertical_velocity = 0
