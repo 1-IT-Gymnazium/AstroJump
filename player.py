@@ -96,13 +96,12 @@ class Player:
         return new_x, new_y
 
     def update_position(self, new_x, new_y):
-        if not self.position_was_reset:
+        if self.position_was_reset is False:
             self.x = new_x
             self.y = new_y
             self.rect = pygame.Rect(new_x, new_y, self.width, self.height)
 
     def reset_position(self):
-        print("resetting")
         self.x = self.initial_x
         self.y = self.initial_y
         self.vertical_velocity = 0
@@ -112,6 +111,7 @@ class Player:
         self.rect.y = self.y
         self.move_left = False
         self.move_right = False
+
 
 
 

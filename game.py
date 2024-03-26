@@ -365,6 +365,7 @@ class Game:
 
     def show_map(self, map_filename=None):
 
+        self.player.position_was_reset = False
         non_coll_tiles = [0]
         if map_filename is not None:
             self.current_level = map_filename
@@ -409,6 +410,7 @@ class Game:
             self.camera.update(self.player)
             pygame.display.update()
             clock.tick(60)
+            self.player.position_was_reset = False
 
     def draw_map(self, game_map, non_coll_tiles):
         for row_index, row in enumerate(game_map):
@@ -436,10 +438,9 @@ class Game:
 
                     if player_rect.colliderect(tile_rect):
                         if tile_id == 15:
-                            print("coliding")
-                            self.player.reset_position()
-                            self.camera.update(self.player)
                             self.player.position_was_reset = True
+                            self.player .reset_position()
+                            self.camera.update(self.player)
                         if new_x > self.player.x:  # Moving right
                             new_x = tile_rect.left - self.player.width
                         elif new_x < self.player.x:  # Moving left
@@ -460,10 +461,9 @@ class Game:
 
                     if player_rect.colliderect(tile_rect):
                         if tile_id == 15:
-                            print("coliding")
+                            self.player.position_was_reset = True
                             self.player.reset_position()
                             self.camera.update(self.player)
-                            self.player.position_was_reset = True
                         if new_y > self.player.y:  # Falling down
                             new_y = tile_rect.top - self.player.height
                             self.player.vertical_velocity = 0
