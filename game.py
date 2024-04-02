@@ -6,6 +6,7 @@ from player import Player
 from camera import Camera
 from slider import Slider
 from transition import circular_fade
+from enemy import ProjectileManager
 
 
 # TODOS:
@@ -31,7 +32,7 @@ class Game:
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("AstroJump")
 
-        num_tiles = 16
+        num_tiles = 17
         self.tile_images = [pygame.image.load(f'Graphics/tiles/{i}.png') for i in range(num_tiles)]
 
         # colors
@@ -67,6 +68,9 @@ class Game:
 
         # enemies
         self.spikes = []
+        self.projectiles = []  # List to hold projectiles
+        self.last_shot_time = 0
+        self.projectile_manager = ProjectileManager(self)
 
     def draw_text(self, text, font, color, x, y):
         text_obj = font.render(text, True, color)
@@ -363,6 +367,15 @@ class Game:
         circular_fade(self.screen, "out")
         self.show_map(next_level_filename)
 
+    def find_tile_position(self, tile_id_to_find):
+        with open("levels/level1.csv", 'r') as file:
+            reader = csv.reader(file)
+            for row_index, row in enumerate(reader):
+                for col_index, tile_id in enumerate(row):
+                    if int(tile_id) == tile_id_to_find:
+                        return col_index, row_index
+        return None, None
+
     def show_map(self, map_filename=None):
 
         self.player.position_was_reset = False
@@ -408,6 +421,9 @@ class Game:
             self.respawn()
             self.player.draw(self.camera)
             self.camera.update(self.player)
+            current_time = pygame.time.get_ticks() / 1000  # Current time in seconds
+            self.projectile_manager.update_projectiles(current_time)
+            self.projectile_manager.draw_projectiles(self.screen)
             pygame.display.update()
             clock.tick(60)
             self.player.position_was_reset = False
@@ -418,6 +434,10 @@ class Game:
                 if tile_id not in non_coll_tiles:
                     tile_image = self.tile_images[tile_id]
                     if tile_id == 15:
+                        y_offset = TILE_HEIGHT - SPIKE_HEIGHT
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + y_offset, SPIKE_WIDTH, SPIKE_HEIGHT)
+                    # todo:change this according to portal size logic
+                    elif tile_id == 14:
                         y_offset = TILE_HEIGHT - SPIKE_HEIGHT
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + y_offset, SPIKE_WIDTH, SPIKE_HEIGHT)
                     else:
@@ -431,6 +451,9 @@ class Game:
                 if tile_id not in non_coll_tiles:
                     if tile_id == 15:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
+                    # todo:change this according to portal size logic
+                    elif tile_id == 14:
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
                     else:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT)
 
@@ -439,7 +462,7 @@ class Game:
                     if player_rect.colliderect(tile_rect):
                         if tile_id == 15:
                             self.player.position_was_reset = True
-                            self.player .reset_position()
+                            self.player.reset_position()
                             self.camera.update(self.player)
                         if new_x > self.player.x:  # Moving right
                             new_x = tile_rect.left - self.player.width
@@ -453,6 +476,9 @@ class Game:
             for col_index, tile_id in enumerate(row):
                 if tile_id not in non_coll_tiles:
                     if tile_id == 15:
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
+                    # todo:change this according to portal size logic
+                    elif tile_id == 14:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
                     else:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT)
