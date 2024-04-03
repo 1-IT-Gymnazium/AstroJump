@@ -367,14 +367,15 @@ class Game:
         circular_fade(self.screen, "out")
         self.show_map(next_level_filename)
 
-    def find_tile_position(self, tile_id_to_find):
+    def find_cannons_position(self, tile_id_to_find):
+        cannons = []
         with open("levels/level1.csv", 'r') as file:
             reader = csv.reader(file)
             for row_index, row in enumerate(reader):
                 for col_index, tile_id in enumerate(row):
                     if int(tile_id) == tile_id_to_find:
-                        return col_index, row_index
-        return None, None
+                        cannons.append((col_index, row_index))
+        return cannons
 
     def show_map(self, map_filename=None):
 
@@ -424,7 +425,7 @@ class Game:
             current_time = pygame.time.get_ticks() / 1000
             self.projectile_manager.update_projectiles(current_time)
             self.projectile_manager.draw_projectiles(self.screen, self.camera)
-            self.check_bullet_collision(new_y)
+            # self.check_bullet_collision(new_y)
             pygame.display.update()
             clock.tick(60)
             self.player.position_was_reset = False
@@ -501,7 +502,7 @@ class Game:
 
         return new_y
 
-    def check_bullet_collision(self, new_y):
+    """def check_bullet_collision(self, new_y):
         projectile_x, projectile_y = self.find_tile_position(16)
         player_rect = pygame.Rect(self.player.x, new_y, self.player.width, self.player.height)
         projectile_rect = pygame.Rect(projectile_x, projectile_y, 16, 9)
@@ -510,6 +511,7 @@ class Game:
             if player_rect.colliderect(projectile_rect):
                 self.player.reset_position()
                 self.projectile_manager.projectiles.remove(projectile)
+    """
 
     def apply_gravity(self):
         if not self.player.is_jumping or self.player.vertical_velocity > 0:

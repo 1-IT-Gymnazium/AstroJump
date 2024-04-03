@@ -26,7 +26,7 @@ class ProjectileManager:
     def __init__(self, game):
         self.projectiles = []
         self.last_shot_time = 0
-        self.game = game  # Reference to the Game instance to access shared resources
+        self.game = game
 
     def update_projectiles(self, current_time):
         # Remove off-screen projectiles
@@ -42,9 +42,9 @@ class ProjectileManager:
             self.last_shot_time = current_time
 
     def spawn_projectile(self):
-        projectile_x, projectile_y = self.game.find_tile_position(16)
-        if projectile_x is not None and projectile_y is not None:
-            self.projectiles.append(Projectile(projectile_x * TILE_WIDTH, projectile_y * TILE_HEIGHT, "left"))
+        for projectile_x, projectile_y in self.game.find_cannons_position(16):
+            if projectile_x is not None and projectile_y is not None:
+                self.projectiles.append(Projectile(projectile_x * TILE_WIDTH, projectile_y * TILE_HEIGHT, "left"))
 
     def draw_projectiles(self, screen, camera):
         for projectile in self.projectiles:
