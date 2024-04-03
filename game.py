@@ -425,7 +425,7 @@ class Game:
             current_time = pygame.time.get_ticks() / 1000
             self.projectile_manager.update_projectiles(current_time)
             self.projectile_manager.draw_projectiles(self.screen, self.camera)
-            # self.check_bullet_collision(new_y)
+            self.check_projectile_collisions()
             pygame.display.update()
             clock.tick(60)
             self.player.position_was_reset = False
@@ -502,16 +502,11 @@ class Game:
 
         return new_y
 
-    """def check_bullet_collision(self, new_y):
-        projectile_x, projectile_y = self.find_tile_position(16)
-        player_rect = pygame.Rect(self.player.x, new_y, self.player.width, self.player.height)
-        projectile_rect = pygame.Rect(projectile_x, projectile_y, 16, 9)
-
+    def check_projectile_collisions(self):
         for projectile in self.projectile_manager.projectiles:
-            if player_rect.colliderect(projectile_rect):
+            if self.player.rect.colliderect(projectile.rect):
                 self.player.reset_position()
-                self.projectile_manager.projectiles.remove(projectile)
-    """
+                print("kulka trefila")
 
     def apply_gravity(self):
         if not self.player.is_jumping or self.player.vertical_velocity > 0:

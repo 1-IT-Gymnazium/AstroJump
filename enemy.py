@@ -9,6 +9,7 @@ class Projectile:
         self.direction = direction
         self.speed = speed
         self.image = pygame.image.load("Graphics/laser_bullet/laser_bullet.png")
+        self.rect = self.image.get_rect(topleft=(x, y))
 
     def update(self):
         # Move the projectile in the specified direction
@@ -16,10 +17,12 @@ class Projectile:
             self.x += self.speed
         elif self.direction == "left":
             self.x -= self.speed
+        self.rect.x = self.x - 5
+        self.rect.y = self.y + 25
 
     def draw(self, screen, camera):
         camera_x, camera_y = camera.camera.topleft
-        screen.blit(self.image, ((self.x + camera_x)-5, (self.y + camera_y)+25))
+        screen.blit(self.image, ((self.x + camera_x) - 5, (self.y + camera_y) + 25))
 
 
 class ProjectileManager:
@@ -49,6 +52,8 @@ class ProjectileManager:
     def draw_projectiles(self, screen, camera):
         for projectile in self.projectiles:
             projectile.draw(screen, camera)
+            # debugging hit box outline
+            # pygame.draw.rect(screen, (255, 0, 0), camera.apply(projectile.rect), 1)
 
 
 class Walker:

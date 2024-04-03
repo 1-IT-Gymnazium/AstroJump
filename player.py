@@ -53,6 +53,8 @@ class Player:
 
         rect = camera.apply(self.rect)
         self.screen.blit(current_frame, rect.topleft)
+        # debugging hit box outline
+        # pygame.draw.rect(self.screen, (0, 0, 255), rect, 1)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
