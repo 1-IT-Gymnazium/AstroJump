@@ -2,36 +2,13 @@ import pygame
 from settings import TILE_WIDTH, TILE_HEIGHT, WINDOW_WIDTH
 
 
-class Enemy:
-    def __init__(self, x, y, health, damage):
-        self.x = x
-        self.y = y
-        self.health = health
-        self.damage = damage
-
-    def take_damage(self, amount):
-        self.health -= amount
-        if self.health <= 0:
-            self.die()
-
-    def die(self):
-        pass
-
-    def update(self):
-        pass
-
-    def draw(self, screen, camera):
-        pass
-
-
 class Projectile:
     def __init__(self, x, y, direction, speed=10):
         self.x = x
         self.y = y
         self.direction = direction
         self.speed = speed
-        self.image = pygame.Surface((10, 5))
-        self.image.fill((255, 0, 0))
+        self.image = pygame.image.load("Graphics/laser_bullet/laser_bullet.png")
 
     def update(self):
         # Move the projectile in the specified direction
@@ -42,7 +19,7 @@ class Projectile:
 
     def draw(self, screen, camera):
         camera_x, camera_y = camera.camera.topleft
-        screen.blit(self.image, (self.x + camera_x, self.y + camera_y))
+        screen.blit(self.image, ((self.x + camera_x)-5, (self.y + camera_y)+25))
 
 
 class ProjectileManager:
@@ -65,14 +42,14 @@ class ProjectileManager:
             self.last_shot_time = current_time
 
     def spawn_projectile(self):
-        tile_x, tile_y = self.game.find_tile_position(16)
-        if tile_x is not None and tile_y is not None:
-            self.projectiles.append(Projectile(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, "left"))
+        projectile_x, projectile_y = self.game.find_tile_position(16)
+        if projectile_x is not None and projectile_y is not None:
+            self.projectiles.append(Projectile(projectile_x * TILE_WIDTH, projectile_y * TILE_HEIGHT, "left"))
 
     def draw_projectiles(self, screen, camera):
         for projectile in self.projectiles:
             projectile.draw(screen, camera)
 
 
-class Walker(Enemy):
+class Walker:
     pass

@@ -402,7 +402,6 @@ class Game:
             for event in pygame.event.get():
                 self.handle_event(event)
 
-
             if self.player.x > 4864 and self.current_level == "levels/level1.csv":
                 next_level_filename = "levels/level2.csv"  # Specify the next level filename
                 self.transition_next_level(next_level_filename)
@@ -422,9 +421,10 @@ class Game:
             self.respawn()
             self.player.draw(self.camera)
             self.camera.update(self.player)
-            current_time = pygame.time.get_ticks() / 1000  # Current time in seconds
+            current_time = pygame.time.get_ticks() / 1000
             self.projectile_manager.update_projectiles(current_time)
             self.projectile_manager.draw_projectiles(self.screen, self.camera)
+            self.check_bullet_collision(new_y)
             pygame.display.update()
             clock.tick(60)
             self.player.position_was_reset = False
@@ -500,6 +500,16 @@ class Game:
                             new_y = tile_rect.bottom
 
         return new_y
+
+    def check_bullet_collision(self, new_y):
+        projectile_x, projectile_y = self.find_tile_position(16)
+        player_rect = pygame.Rect(self.player.x, new_y, self.player.width, self.player.height)
+        projectile_rect = pygame.Rect(projectile_x, projectile_y, 16, 9)
+
+        for projectile in self.projectile_manager.projectiles:
+            if player_rect.colliderect(projectile_rect):
+                self.player.reset_position()
+                self.projectile_manager.projectiles.remove(projectile)
 
     def apply_gravity(self):
         if not self.player.is_jumping or self.player.vertical_velocity > 0:
