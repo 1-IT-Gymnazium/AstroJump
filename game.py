@@ -402,6 +402,7 @@ class Game:
             for event in pygame.event.get():
                 self.handle_event(event)
 
+
             if self.player.x > 4864 and self.current_level == "levels/level1.csv":
                 next_level_filename = "levels/level2.csv"  # Specify the next level filename
                 self.transition_next_level(next_level_filename)
@@ -423,7 +424,7 @@ class Game:
             self.camera.update(self.player)
             current_time = pygame.time.get_ticks() / 1000  # Current time in seconds
             self.projectile_manager.update_projectiles(current_time)
-            self.projectile_manager.draw_projectiles(self.screen)
+            self.projectile_manager.draw_projectiles(self.screen, self.camera)
             pygame.display.update()
             clock.tick(60)
             self.player.position_was_reset = False

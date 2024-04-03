@@ -35,13 +35,14 @@ class Projectile:
 
     def update(self):
         # Move the projectile in the specified direction
-        if self.direction == 'right':
+        if self.direction == "right":
             self.x += self.speed
-        elif self.direction == 'left':
+        elif self.direction == "left":
             self.x -= self.speed
 
-    def draw(self, screen):
-        screen.blit(self.image, (self.x, self.y))
+    def draw(self, screen, camera):
+        camera_x, camera_y = camera.camera.topleft
+        screen.blit(self.image, (self.x + camera_x, self.y + camera_y))
 
 
 class ProjectileManager:
@@ -66,11 +67,11 @@ class ProjectileManager:
     def spawn_projectile(self):
         tile_x, tile_y = self.game.find_tile_position(16)
         if tile_x is not None and tile_y is not None:
-            self.projectiles.append(Projectile(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, 'left'))
+            self.projectiles.append(Projectile(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, "left"))
 
-    def draw_projectiles(self, screen):
+    def draw_projectiles(self, screen, camera):
         for projectile in self.projectiles:
-            projectile.draw(screen)
+            projectile.draw(screen, camera)
 
 
 class Walker(Enemy):

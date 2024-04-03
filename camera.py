@@ -11,9 +11,6 @@ class Camera:
     def apply(self, entity):
         return entity.move(self.camera.topleft)
 
-    def apply_static(self, entity_rect):
-        return entity_rect.move(-self.camera.x, -self.camera.y)
-
     def update(self, target):
         x = -target.x + int(WINDOW_WIDTH / 2)
         y = -target.y + int(WINDOW_HEIGHT / 2)
