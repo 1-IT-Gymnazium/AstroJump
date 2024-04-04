@@ -72,18 +72,23 @@ class Game:
         self.last_shot_time = 0
         self.projectile_manager = ProjectileManager(self)
 
+        self.game_paused = False
+
     def draw_text(self, text, font, color, x, y):
+
         text_obj = font.render(text, True, color)
         text_rect = text_obj.get_rect(center=(x, y))
         self.screen.blit(text_obj, text_rect)
 
     def draw_button(self, text, rect, color):
+
         pygame.draw.rect(self.screen, color, rect, border_radius=30)
         text_surface = self.font_custom.render(text, True, self.white)
         text_rect = text_surface.get_rect(center=rect.center)
         self.screen.blit(text_surface, text_rect)
 
     def main_menu(self):
+
         while True:
             bg = pygame.image.load("Graphics/backgrounds/BG.png")
             self.screen.blit(bg, (0, 0))
@@ -135,6 +140,7 @@ class Game:
             pygame.display.update()
 
     def level_select(self):
+
         while True:
             level_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
             self.screen.blit(level_bg, (0, 0))
@@ -197,6 +203,7 @@ class Game:
             pygame.display.update()
 
     def tutorial(self):
+
         while True:
             tutorial_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
             self.screen.blit(tutorial_bg, (0, 0))
@@ -236,6 +243,7 @@ class Game:
             pygame.display.update()
 
     def settings(self):
+
         while True:
             tutorial_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
             self.screen.blit(tutorial_bg, (0, 0))
@@ -277,31 +285,51 @@ class Game:
 
             pygame.display.update()
 
-    def respawn(self):
+    def show_respawn_menu(self):
+
         main_menu_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2 - 20, 500, 300, BUTTON_HEIGHT)
         respawn_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT)
+        quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH, BUTTON_HEIGHT)
 
         mx, my = pygame.mouse.get_pos()
         main_menu_hovered = main_menu_button.collidepoint((mx, my))
         respawn_hovered = respawn_button.collidepoint((mx, my))
+        quit_hovered = quit_button.collidepoint((mx, my))
 
         if self.player.y > 1800:
+            self.game_paused = True
             self.screen.fill((0, 0, 0))
             self.draw_text("You fell into the abyss", self.font_custom, self.quit_button_color, WINDOW_WIDTH // 2, 175)
             self.draw_button("Main menu", main_menu_button, self.hover_color if main_menu_hovered else self.button_color)
             self.draw_button("Respawn", respawn_button, self.hover_color if respawn_hovered else self.button_color)
+            self.draw_button("Quit", quit_button, self.quit_button_hover_color if quit_hovered else self.quit_button_color)
 
             if respawn_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
                     self.player.reset_position()
                     self.button_sound.play()
+                    self.game_paused = False
 
             if main_menu_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
                     self.player.reset_position()
                     self.button_sound.play()
+                    pygame.mixer.music.load(self.bg_music)
+                    pygame.mixer.music.play(-1)
+                    circular_fade(self.screen, "out")
                     self.main_menu()
+                    self.game_paused = False
                     return
+
+            if quit_button.collidepoint((mx, my)):
+                if pygame.mouse.get_pressed()[0]:
+                    pygame.quit()
+                    sys.exit()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
     def show_game_menu(self):
 
@@ -368,6 +396,7 @@ class Game:
         self.show_map(next_level_filename)
 
     def find_cannons_position(self, tile_id_to_find):
+
         cannons = []
         with open("levels/level1.csv", 'r') as file:
             reader = csv.reader(file)
@@ -395,6 +424,7 @@ class Game:
         self.camera = Camera(MAP_WIDTH, MAP_HEIGHT)
 
         while True:
+
             map_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png").convert_alpha()
             self.screen.blit(map_bg, (0, 0))
             self.player.update_animation()
@@ -419,12 +449,13 @@ class Game:
 
             self.player.update_position(new_x, new_y)
             self.draw_map(game_map, non_coll_tiles)
-            self.respawn()
             self.player.draw(self.camera)
             self.camera.update(self.player)
+            if self.game_paused is False:
+                self.projectile_manager.draw_projectiles(self.screen, self.camera)
+            self.show_respawn_menu()
             current_time = pygame.time.get_ticks() / 1000
             self.projectile_manager.update_projectiles(current_time)
-            self.projectile_manager.draw_projectiles(self.screen, self.camera)
             self.check_projectile_collisions()
             pygame.display.update()
             clock.tick(60)
@@ -439,9 +470,9 @@ class Game:
                         y_offset = TILE_HEIGHT - SPIKE_HEIGHT
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + y_offset, SPIKE_WIDTH, SPIKE_HEIGHT)
                     # todo:change this according to portal size logic
-                    elif tile_id == 14:
-                        y_offset = TILE_HEIGHT - SPIKE_HEIGHT
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + y_offset, SPIKE_WIDTH, SPIKE_HEIGHT)
+                    elif tile_id == 16:
+                        y_offset = TILE_HEIGHT - CANNON_HEIGHT
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + y_offset, CANNON_WIDTH, CANNON_HEIGHT)
                     else:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT)
 
@@ -454,8 +485,8 @@ class Game:
                     if tile_id == 15:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
                     # todo:change this according to portal size logic
-                    elif tile_id == 14:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
+                    elif tile_id == 16:
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - CANNON_HEIGHT), CANNON_WIDTH, CANNON_HEIGHT)
                     else:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT)
 
@@ -480,8 +511,8 @@ class Game:
                     if tile_id == 15:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
                     # todo:change this according to portal size logic
-                    elif tile_id == 14:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
+                    elif tile_id == 16:
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - CANNON_HEIGHT), CANNON_WIDTH, CANNON_HEIGHT)
                     else:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT)
 

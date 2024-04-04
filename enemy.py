@@ -22,7 +22,7 @@ class Projectile:
 
     def draw(self, screen, camera):
         camera_x, camera_y = camera.camera.topleft
-        screen.blit(self.image, ((self.x + camera_x) - 5, (self.y + camera_y) + 25))
+        screen.blit(self.image, ((self.x + camera_x) - 5, (self.y + camera_y) + 40))
 
 
 class ProjectileManager:
