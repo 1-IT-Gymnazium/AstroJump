@@ -12,8 +12,6 @@ from enemy import ProjectileManager
 # TODOS:
 
 # todo: split up code into multiple smaller functions and refactor some functions into classes
-# todo: work on UI for example ENTER button as an option to get out of game_menu etc...
-# todo: import and work on enemies
 # todo: resize portal block, figure out how to import it as a 64X128 tile instead of 64X64, make it work as the level end transition to the next level
 # todo: create final layouts of all 3 levels
 # todo: create documentation with external program
@@ -23,7 +21,7 @@ from enemy import ProjectileManager
 
 # todo: (Optional) create double jump
 # todo: (Optional) make more stuff for menu like more settings options etc...
-# todo: (Optional) add visual effects like particles etc...
+# todo: (Optional) add visual effects like particles etc. ..
 
 
 class Game:
@@ -434,7 +432,12 @@ class Game:
                 self.handle_event(event)
 
             if self.player.x > 4864 and self.current_level == "levels/level1.csv":
-                next_level_filename = "levels/level2.csv"  # Specify the next level filename
+                next_level_filename = "levels/level2.csv"
+                self.transition_next_level(next_level_filename)
+                return
+
+            if self.player.x > 4864 and self.current_level == "levels/level2.csv":
+                next_level_filename = "levels/level3.csv"
                 self.transition_next_level(next_level_filename)
                 return
 
