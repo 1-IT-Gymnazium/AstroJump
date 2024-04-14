@@ -387,7 +387,6 @@ class Game:
             pygame.display.update()
 
     def transition_next_level(self, next_level_filename):
-
         self.player.reset_position()
         self.current_level = next_level_filename
         circular_fade(self.screen, "out")
@@ -395,8 +394,10 @@ class Game:
 
     def find_cannons_position(self, tile_id_to_find):
 
+        file_path = self.current_level
+
         cannons = []
-        with open("levels/level1.csv", 'r') as file:
+        with open(file_path, 'r') as file:
             reader = csv.reader(file)
             for row_index, row in enumerate(reader):
                 for col_index, tile_id in enumerate(row):

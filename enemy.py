@@ -1,5 +1,5 @@
 import pygame
-from settings import TILE_WIDTH, TILE_HEIGHT, WINDOW_WIDTH
+from settings import TILE_WIDTH, TILE_HEIGHT
 
 
 class Projectile:
@@ -32,8 +32,6 @@ class ProjectileManager:
         self.game = game
 
     def update_projectiles(self, current_time):
-        # Remove off-screen projectiles
-        self.projectiles = [proj for proj in self.projectiles if 0 < proj.x < WINDOW_WIDTH]
 
         # Update each projectile
         for projectile in self.projectiles:
@@ -53,7 +51,7 @@ class ProjectileManager:
         for projectile in self.projectiles:
             projectile.draw(screen, camera)
             # debugging hit box outline
-            # pygame.draw.rect(screen, (255, 0, 0), camera.apply(projectile.rect), 1)
+            pygame.draw.rect(screen, (255, 0, 0), camera.apply(projectile.rect), 1)
 
 
 class Walker:
