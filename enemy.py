@@ -51,8 +51,4 @@ class ProjectileManager:
         for projectile in self.projectiles:
             projectile.draw(screen, camera)
             # debugging hit box outline
-            pygame.draw.rect(screen, (255, 0, 0), camera.apply(projectile.rect), 1)
-
-
-class Walker:
-    pass
+            # pygame.draw.rect(screen, (255, 0, 0), camera.apply(projectile.rect), 1)

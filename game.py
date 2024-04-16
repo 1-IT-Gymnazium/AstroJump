@@ -25,7 +25,19 @@ from enemy import ProjectileManager
 
 
 class Game:
+    """
+    A class to manage the main game environment including initialization,
+    game loops, and transitions between different states of the game such as menus and levels.
+
+    :param none: This class constructor takes no parameters.
+    """
+
     def __init__(self):
+
+        """
+        Initializes the game environment, setting up the screen, loading resources, and initializing game components.
+        """
+
         pygame.init()
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("AstroJump")
@@ -58,6 +70,7 @@ class Game:
         self.button_sound = pygame.mixer.Sound("Sounds/button_sound3.mp3")
         self.bg_music = "Sounds/BG_music.mp3"
         self.bg_level_music = "Sounds/level_bg_music1.mp3"
+        self.hit_sound = pygame.mixer.Sound("Sounds/hit_sound.mp3")
         pygame.mixer.music.load(self.bg_music)
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
@@ -74,11 +87,29 @@ class Game:
 
     def draw_text(self, text, font, color, x, y):
 
+        """
+        Draws text on the game screen at a specified position.
+
+        :param str text: The text to be displayed.
+        :param Font font: A pygame Font object used to render the text.
+        :param tuple color: A tuple representing the RGB color of the text.
+        :param int x: The x-coordinate of the text position.
+        :param int y: The y-coordinate of the text position.
+        """
+
         text_obj = font.render(text, True, color)
         text_rect = text_obj.get_rect(center=(x, y))
         self.screen.blit(text_obj, text_rect)
 
     def draw_button(self, text, rect, color):
+
+        """
+        Draws a button with text centered on the screen.
+
+        :param str text: The text to be displayed on the button.
+        :param Rect rect: A pygame Rect object representing the button's position and dimensions.
+        :param tuple color: A tuple representing the RGB color of the button.
+        """
 
         pygame.draw.rect(self.screen, color, rect, border_radius=30)
         text_surface = self.font_custom.render(text, True, self.white)
@@ -86,6 +117,9 @@ class Game:
         self.screen.blit(text_surface, text_rect)
 
     def main_menu(self):
+        """
+        Handles the main menu loop, processing events and updating the display.
+        """
 
         while True:
             bg = pygame.image.load("Graphics/backgrounds/BG.png")
@@ -138,6 +172,10 @@ class Game:
             pygame.display.update()
 
     def level_select(self):
+
+        """
+        Displays the level selection menu and handles level loading based on user interaction.
+        """
 
         while True:
             level_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
@@ -202,6 +240,10 @@ class Game:
 
     def tutorial(self):
 
+        """
+        Displays the tutorial screen and handles interactions within the tutorial.
+        """
+
         while True:
             tutorial_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
             self.screen.blit(tutorial_bg, (0, 0))
@@ -241,6 +283,10 @@ class Game:
             pygame.display.update()
 
     def settings(self):
+
+        """
+        Displays the settings menu where users can adjust preferences like sound volume.
+        """
 
         while True:
             tutorial_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
@@ -284,6 +330,10 @@ class Game:
             pygame.display.update()
 
     def show_respawn_menu(self):
+
+        """
+        Displays the respawn menu when the player dies and handles the actions based on user interaction.
+        """
 
         main_menu_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2 - 20, 500, 300, BUTTON_HEIGHT)
         respawn_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -330,6 +380,10 @@ class Game:
                     sys.exit()
 
     def show_game_menu(self):
+
+        """
+        Displays the in-game menu and handles navigation based on user interaction.
+        """
 
         while True:
             mx, my = pygame.mouse.get_pos()
@@ -387,12 +441,26 @@ class Game:
             pygame.display.update()
 
     def transition_next_level(self, next_level_filename):
+
+        """
+        Manages the transition to the next level, including loading the new level map.
+
+        :param str next_level_filename: The filename of the next level to load.
+        """
         self.player.reset_position()
         self.current_level = next_level_filename
         circular_fade(self.screen, "out")
         self.show_map(next_level_filename)
 
     def find_cannons_position(self, tile_id_to_find):
+
+        """
+        Searches the current level's map file for specific tiles, returning their positions.
+
+        :param int tile_id_to_find: The tile ID to search for in the map.
+        :return: A list of tuples indicating the positions (column, row) of found tiles.
+        :rtype: list
+        """
 
         file_path = self.current_level
 
@@ -406,6 +474,12 @@ class Game:
         return cannons
 
     def show_map(self, map_filename=None):
+
+        """
+        Displays the game map and handles all interactions within the game level.
+
+        :param str map_filename: Optional filename of the map to load, defaults to None.
+        """
 
         self.player.position_was_reset = False
         non_coll_tiles = [0]
@@ -466,6 +540,13 @@ class Game:
             self.player.position_was_reset = False
 
     def draw_map(self, game_map, non_coll_tiles):
+        """
+        Draws the game map on the screen based on tile IDs that are not specified as non-collidable.
+
+        :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.
+        :param list non_coll_tiles: A list of tile IDs that should not be drawn because they are non-collidable.
+        """
+
         for row_index, row in enumerate(game_map):
             for col_index, tile_id in enumerate(row):
                 if tile_id not in non_coll_tiles:
@@ -483,12 +564,21 @@ class Game:
                     self.screen.blit(tile_image, self.camera.apply(tile_rect))
 
     def check_horizontal_collision(self, game_map, new_x, non_coll_tiles):
+        """
+        Checks for horizontal collisions between the player and collidable tiles in the game map.
+
+        :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.
+        :param int new_x: The proposed new x-coordinate for the player, based on movement.
+        :param list non_coll_tiles: A list of tile IDs that the player can pass through without collision.
+        :return: The new x-coordinate for the player after collision checks.
+        :rtype: int
+        """
+
         for row_index, row in enumerate(game_map):
             for col_index, tile_id in enumerate(row):
                 if tile_id not in non_coll_tiles:
                     if tile_id == 15:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
-                    # todo:change this according to portal size logic
                     elif tile_id == 16:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - CANNON_HEIGHT), CANNON_WIDTH, CANNON_HEIGHT)
                     else:
@@ -501,6 +591,7 @@ class Game:
                             self.player.position_was_reset = True
                             self.player.reset_position()
                             self.camera.update(self.player)
+                            self.hit_sound.play()
                         if new_x > self.player.x:  # Moving right
                             new_x = tile_rect.left - self.player.width
                         elif new_x < self.player.x:  # Moving left
@@ -509,12 +600,21 @@ class Game:
         return new_x
 
     def check_vertical_collision(self, game_map, new_y, non_coll_tiles):
+        """
+        Checks for vertical collisions between the player and collidable tiles in the game map.
+
+        :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.
+        :param int new_y: The proposed new y-coordinate for the player, based on gravity or jumping.
+        :param list non_coll_tiles: A list of tile IDs that the player can pass through without collision.
+        :return: The new y-coordinate for the player after collision checks.
+        :rtype: int
+        """
+
         for row_index, row in enumerate(game_map):
             for col_index, tile_id in enumerate(row):
                 if tile_id not in non_coll_tiles:
                     if tile_id == 15:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
-                    # todo:change this according to portal size logic
                     elif tile_id == 16:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - CANNON_HEIGHT), CANNON_WIDTH, CANNON_HEIGHT)
                     else:
@@ -527,6 +627,7 @@ class Game:
                             self.player.position_was_reset = True
                             self.player.reset_position()
                             self.camera.update(self.player)
+                            self.hit_sound.play()
                         if new_y > self.player.y:  # Falling down
                             new_y = tile_rect.top - self.player.height
                             self.player.vertical_velocity = 0
@@ -538,12 +639,23 @@ class Game:
         return new_y
 
     def check_projectile_collisions(self):
+        """
+        Checks for collisions between any projectile and the player, resetting the player's position if a collision occurs.
+        """
         for projectile in self.projectile_manager.projectiles:
             if self.player.rect.colliderect(projectile.rect):
+                self.hit_sound.play()
                 self.player.reset_position()
                 print("kulka trefila")
 
     def apply_gravity(self):
+        """
+        Applies gravity to the player, updating their vertical velocity and position.
+
+        :return: A tuple containing the new x and y coordinates of the player.
+        :rtype: tuple
+        """
+
         if not self.player.is_jumping or self.player.vertical_velocity > 0:
             self.player.vertical_velocity += self.player.gravity
             self.player.is_jumping = True
@@ -551,6 +663,12 @@ class Game:
         return new_x, new_y
 
     def handle_event(self, event):
+        """
+        Handles a single event from the pygame event queue, affecting the game state or player based on the event type.
+
+        :param Event event: A pygame event object to be processed.
+        """
+
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
