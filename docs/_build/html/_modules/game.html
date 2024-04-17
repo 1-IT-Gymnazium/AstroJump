@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>game &mdash; AstroJump 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            AstroJump
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">src</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">AstroJump</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">game</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for game</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">settings</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">from</span> <span class="nn">player</span> <span class="kn">import</span> <span class="n">Player</span>
+<span class="kn">from</span> <span class="nn">camera</span> <span class="kn">import</span> <span class="n">Camera</span>
+<span class="kn">from</span> <span class="nn">slider</span> <span class="kn">import</span> <span class="n">Slider</span>
+<span class="kn">from</span> <span class="nn">transition</span> <span class="kn">import</span> <span class="n">circular_fade</span>
+<span class="kn">from</span> <span class="nn">enemy</span> <span class="kn">import</span> <span class="n">ProjectileManager</span>
+
+
+<div class="viewcode-block" id="Game">
+<a class="viewcode-back" href="../game.html#game.Game">[docs]</a>
+<span class="k">class</span> <span class="nc">Game</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to manage the main game environment including initialization,</span>
+<span class="sd">    game loops, and transitions between different states of the game such as menus and levels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the game environment, setting up the screen, loading resources, and initializing game components.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="n">WINDOW_WIDTH</span><span class="p">,</span> <span class="n">WINDOW_HEIGHT</span><span class="p">))</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;AstroJump&quot;</span><span class="p">)</span>
+
+        <span class="n">num_tiles</span> <span class="o">=</span> <span class="mi">17</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tile_images</span> <span class="o">=</span> <span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Graphics/tiles/</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_tiles</span><span class="p">)]</span>
+
+        <span class="c1"># colors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">white</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">78</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quit_button_color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">125</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quit_button_hover_color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">125</span><span class="p">)</span>
+
+        <span class="c1"># player</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="n">Player</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_player_position</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="c1"># camera</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">(</span><span class="n">MAP_WIDTH</span><span class="p">,</span> <span class="n">MAP_HEIGHT</span><span class="p">)</span>
+
+        <span class="c1"># sliders</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sfx_slider</span> <span class="o">=</span> <span class="n">Slider</span><span class="p">(</span><span class="mi">810</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">music_slider</span> <span class="o">=</span> <span class="n">Slider</span><span class="p">(</span><span class="mi">810</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="c1"># fonts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">Font</span><span class="p">(</span><span class="s2">&quot;Graphics/fonts/pixel_font.ttf&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+
+        <span class="c1"># sounds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="s2">&quot;Sounds/button_sound3.mp3&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bg_music</span> <span class="o">=</span> <span class="s2">&quot;Sounds/BG_music.mp3&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bg_level_music</span> <span class="o">=</span> <span class="s2">&quot;Sounds/level_bg_music1.mp3&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hit_sound</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="s2">&quot;Sounds/hit_sound.mp3&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hit_sound</span><span class="o">.</span><span class="n">set_volume</span><span class="p">(</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bg_music</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">set_volume</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_level</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># enemies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spikes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projectiles</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List to hold projectiles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_shot_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projectile_manager</span> <span class="o">=</span> <span class="n">ProjectileManager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">game_paused</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Game.draw_text">
+<a class="viewcode-back" href="../game.html#game.Game.draw_text">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">font</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws text on the game screen at a specified position.</span>
+
+<span class="sd">        :param str text: The text to be displayed.</span>
+<span class="sd">        :param Font font: A pygame Font object used to render the text.</span>
+<span class="sd">        :param tuple color: A tuple representing the RGB color of the text.</span>
+<span class="sd">        :param int x: The x-coordinate of the text position.</span>
+<span class="sd">        :param int y: The y-coordinate of the text position.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">text_obj</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+        <span class="n">text_rect</span> <span class="o">=</span> <span class="n">text_obj</span><span class="o">.</span><span class="n">get_rect</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text_obj</span><span class="p">,</span> <span class="n">text_rect</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.draw_button">
+<a class="viewcode-back" href="../game.html#game.Game.draw_button">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws a button with text centered on the screen.</span>
+
+<span class="sd">        :param str text: The text to be displayed on the button.</span>
+<span class="sd">        :param Rect rect: A pygame Rect object representing the button&#39;s position and dimensions.</span>
+<span class="sd">        :param tuple color: A tuple representing the RGB color of the button.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">border_radius</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+        <span class="n">text_surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
+        <span class="n">text_rect</span> <span class="o">=</span> <span class="n">text_surface</span><span class="o">.</span><span class="n">get_rect</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">rect</span><span class="o">.</span><span class="n">center</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text_surface</span><span class="p">,</span> <span class="n">text_rect</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.main_menu">
+<a class="viewcode-back" href="../game.html#game.Game.main_menu">[docs]</a>
+    <span class="k">def</span> <span class="nf">main_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handles the main menu loop, processing events and updating the display.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">bg</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;Graphics/backgrounds/BG.png&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">bg</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_text</span><span class="p">(</span><span class="s2">&quot;Astro Jump&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">white</span><span class="p">,</span> <span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+
+            <span class="n">mx</span><span class="p">,</span> <span class="n">my</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+
+            <span class="n">play_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+            <span class="n">tutorial_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+            <span class="n">settings_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+            <span class="n">quit_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+
+            <span class="n">play_hovered</span> <span class="o">=</span> <span class="n">play_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+            <span class="n">tutorial_hovered</span> <span class="o">=</span> <span class="n">tutorial_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+            <span class="n">settings_hovered</span> <span class="o">=</span> <span class="n">settings_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+            <span class="n">quit_hovered</span> <span class="o">=</span> <span class="n">quit_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Play&quot;</span><span class="p">,</span> <span class="n">play_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">play_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Tutorial&quot;</span><span class="p">,</span> <span class="n">tutorial_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">tutorial_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Settings&quot;</span><span class="p">,</span> <span class="n">settings_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">settings_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Quit Game&quot;</span><span class="p">,</span> <span class="n">quit_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quit_button_hover_color</span> <span class="k">if</span> <span class="n">quit_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">quit_button_color</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">play_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">level_select</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">tutorial_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">tutorial</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">settings_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">quit_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+                        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.level_select">
+<a class="viewcode-back" href="../game.html#game.Game.level_select">[docs]</a>
+    <span class="k">def</span> <span class="nf">level_select</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays the level selection menu and handles level loading based on user interaction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">level_bg</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;Graphics/backgrounds/Level_BG.png&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">level_bg</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_text</span><span class="p">(</span><span class="s2">&quot;Select a Level&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">white</span><span class="p">,</span> <span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">175</span><span class="p">)</span>
+
+            <span class="n">mx</span><span class="p">,</span> <span class="n">my</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+
+            <span class="n">return_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+            <span class="n">level1</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">((</span><span class="n">WINDOW_WIDTH</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">BUTTON_WIDTH</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">BUTTON_GAP</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+            <span class="n">level2</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">level1</span><span class="o">.</span><span class="n">right</span> <span class="o">+</span> <span class="n">BUTTON_GAP</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+            <span class="n">level3</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">level2</span><span class="o">.</span><span class="n">right</span> <span class="o">+</span> <span class="n">BUTTON_GAP</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+
+            <span class="n">return_hovered</span> <span class="o">=</span> <span class="n">return_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+            <span class="n">level1_hovered</span> <span class="o">=</span> <span class="n">level1</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+            <span class="n">level2_hovered</span> <span class="o">=</span> <span class="n">level2</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+            <span class="n">level3_hovered</span> <span class="o">=</span> <span class="n">level3</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Return&quot;</span><span class="p">,</span> <span class="n">return_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">return_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Level 1&quot;</span><span class="p">,</span> <span class="n">level1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">level1_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Level 2&quot;</span><span class="p">,</span> <span class="n">level2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">level2_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Level 3&quot;</span><span class="p">,</span> <span class="n">level3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">level3_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">level1</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                    <span class="n">circular_fade</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="s1">&#39;out&#39;</span><span class="p">)</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bg_level_music</span><span class="p">)</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">show_map</span><span class="p">(</span><span class="s2">&quot;levels/level1.csv&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">level2</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                    <span class="n">circular_fade</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="s1">&#39;out&#39;</span><span class="p">)</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bg_level_music</span><span class="p">)</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">show_map</span><span class="p">(</span><span class="s2">&quot;levels/level2.csv&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">level3</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Level 3 Selected&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="mi">3</span>
+
+            <span class="k">if</span> <span class="n">return_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                    <span class="k">return</span>
+
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_ESCAPE</span><span class="p">:</span>
+                        <span class="k">return</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.tutorial">
+<a class="viewcode-back" href="../game.html#game.Game.tutorial">[docs]</a>
+    <span class="k">def</span> <span class="nf">tutorial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays the tutorial screen and handles interactions within the tutorial.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">tutorial_bg</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;Graphics/backgrounds/Level_BG.png&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">tutorial_bg</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+            <span class="n">mx</span><span class="p">,</span> <span class="n">my</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+
+            <span class="n">return_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+            <span class="n">page1</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+            <span class="n">page2</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="mi">1170</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+
+            <span class="n">return_hovered</span> <span class="o">=</span> <span class="n">return_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Return&quot;</span><span class="p">,</span> <span class="n">return_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">return_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">,</span> <span class="n">page1</span><span class="p">,</span> <span class="n">border_radius</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">,</span> <span class="n">page2</span><span class="p">,</span> <span class="n">border_radius</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_text</span><span class="p">(</span><span class="s2">&quot;Tutorial&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">white</span><span class="p">,</span> <span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">175</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_text</span><span class="p">(</span><span class="s2">&quot;Return&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">white</span><span class="p">,</span> <span class="n">return_button</span><span class="o">.</span><span class="n">centerx</span><span class="p">,</span> <span class="n">return_button</span><span class="o">.</span><span class="n">centery</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_text</span><span class="p">(</span><span class="s2">&quot;A - move left&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">white</span><span class="p">,</span> <span class="n">page1</span><span class="o">.</span><span class="n">centerx</span><span class="p">,</span> <span class="mi">350</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_text</span><span class="p">(</span><span class="s2">&quot;D - move right&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">white</span><span class="p">,</span> <span class="n">page1</span><span class="o">.</span><span class="n">centerx</span><span class="p">,</span> <span class="mi">450</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_text</span><span class="p">(</span><span class="s2">&quot;Space - jump&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">white</span><span class="p">,</span> <span class="n">page1</span><span class="o">.</span><span class="n">centerx</span><span class="p">,</span> <span class="mi">550</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">return_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                    <span class="k">return</span>
+
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_ESCAPE</span><span class="p">:</span>
+                        <span class="k">return</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.settings">
+<a class="viewcode-back" href="../game.html#game.Game.settings">[docs]</a>
+    <span class="k">def</span> <span class="nf">settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays the settings menu where users can adjust preferences like sound volume.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">tutorial_bg</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;Graphics/backgrounds/Level_BG.png&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">tutorial_bg</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+            <span class="n">mx</span><span class="p">,</span> <span class="n">my</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+
+            <span class="n">return_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+
+            <span class="n">return_hovered</span> <span class="o">=</span> <span class="n">return_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Return&quot;</span><span class="p">,</span> <span class="n">return_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">return_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_text</span><span class="p">(</span><span class="s2">&quot;Settings&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">white</span><span class="p">,</span> <span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">175</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_text</span><span class="p">(</span><span class="s2">&quot;SFX volume&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">white</span><span class="p">,</span> <span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">350</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_text</span><span class="p">(</span><span class="s2">&quot;Music volume&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">white</span><span class="p">,</span> <span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">650</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">sfx_slider</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">music_slider</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">sfx_slider</span><span class="o">.</span><span class="n">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">music_slider</span><span class="o">.</span><span class="n">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONUP</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">set_volume</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sfx_slider</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">set_volume</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">music_slider</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">return_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                        <span class="k">return</span>
+
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_ESCAPE</span><span class="p">:</span>
+                        <span class="k">return</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.show_respawn_menu">
+<a class="viewcode-back" href="../game.html#game.Game.show_respawn_menu">[docs]</a>
+    <span class="k">def</span> <span class="nf">show_respawn_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays the respawn menu when the player dies and handles the actions based on user interaction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">main_menu_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+        <span class="n">respawn_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+        <span class="n">quit_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+
+        <span class="n">mx</span><span class="p">,</span> <span class="n">my</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+        <span class="n">main_menu_hovered</span> <span class="o">=</span> <span class="n">main_menu_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+        <span class="n">respawn_hovered</span> <span class="o">=</span> <span class="n">respawn_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+        <span class="n">quit_hovered</span> <span class="o">=</span> <span class="n">quit_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">1800</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_paused</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_text</span><span class="p">(</span><span class="s2">&quot;You fell into the abyss&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_custom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quit_button_color</span><span class="p">,</span> <span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">175</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Main menu&quot;</span><span class="p">,</span> <span class="n">main_menu_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">main_menu_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Respawn&quot;</span><span class="p">,</span> <span class="n">respawn_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">respawn_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Quit&quot;</span><span class="p">,</span> <span class="n">quit_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quit_button_hover_color</span> <span class="k">if</span> <span class="n">quit_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">quit_button_color</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">respawn_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">reset_position</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game_paused</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="n">main_menu_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">reset_position</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bg_music</span><span class="p">)</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">circular_fade</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game_paused</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">return</span>
+
+            <span class="k">if</span> <span class="n">quit_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.show_game_menu">
+<a class="viewcode-back" href="../game.html#game.Game.show_game_menu">[docs]</a>
+    <span class="k">def</span> <span class="nf">show_game_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays the in-game menu and handles navigation based on user interaction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">mx</span><span class="p">,</span> <span class="n">my</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+
+            <span class="n">resume_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+            <span class="n">settings_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+            <span class="n">main_menu_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+            <span class="n">quit_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">BUTTON_WIDTH</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="n">BUTTON_WIDTH</span><span class="p">,</span> <span class="n">BUTTON_HEIGHT</span><span class="p">)</span>
+
+            <span class="n">resume_hovered</span> <span class="o">=</span> <span class="n">resume_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+            <span class="n">quit_hovered</span> <span class="o">=</span> <span class="n">quit_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+            <span class="n">settings_hovered</span> <span class="o">=</span> <span class="n">settings_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+            <span class="n">main_menu_hovered</span> <span class="o">=</span> <span class="n">main_menu_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>
+
+            <span class="n">tutorial_bg</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;Graphics/backgrounds/Level_BG.png&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">tutorial_bg</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Resume&quot;</span><span class="p">,</span> <span class="n">resume_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">resume_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Quit&quot;</span><span class="p">,</span> <span class="n">quit_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quit_button_hover_color</span> <span class="k">if</span> <span class="n">quit_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">quit_button_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Settings&quot;</span><span class="p">,</span> <span class="n">settings_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">settings_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_button</span><span class="p">(</span><span class="s2">&quot;Menu&quot;</span><span class="p">,</span> <span class="n">main_menu_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover_color</span> <span class="k">if</span> <span class="n">main_menu_hovered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_color</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">resume_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                    <span class="k">return</span>
+
+            <span class="k">if</span> <span class="n">main_menu_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">reset_position</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bg_music</span><span class="p">)</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">circular_fade</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">settings_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">button_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">quit_button</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_ESCAPE</span><span class="p">:</span>
+                        <span class="k">return</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.transition_next_level">
+<a class="viewcode-back" href="../game.html#game.Game.transition_next_level">[docs]</a>
+    <span class="k">def</span> <span class="nf">transition_next_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">next_level_filename</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Manages the transition to the next level, including loading the new level map.</span>
+
+<span class="sd">        :param str next_level_filename: The filename of the next level to load.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">reset_position</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_level</span> <span class="o">=</span> <span class="n">next_level_filename</span>
+        <span class="n">circular_fade</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_map</span><span class="p">(</span><span class="n">next_level_filename</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.find_cannons_position">
+<a class="viewcode-back" href="../game.html#game.Game.find_cannons_position">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_cannons_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile_id_to_find</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Searches the current level&#39;s map file for specific tiles, returning their positions.</span>
+
+<span class="sd">        :param int tile_id_to_find: The tile ID to search for in the map.</span>
+<span class="sd">        :return: A list of tuples indicating the positions (column, row) of found tiles.</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_level</span>
+
+        <span class="n">cannons</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">row_index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reader</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">col_index</span><span class="p">,</span> <span class="n">tile_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">tile_id</span><span class="p">)</span> <span class="o">==</span> <span class="n">tile_id_to_find</span><span class="p">:</span>
+                        <span class="n">cannons</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">col_index</span><span class="p">,</span> <span class="n">row_index</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">cannons</span></div>
+
+
+<div class="viewcode-block" id="Game.show_map">
+<a class="viewcode-back" href="../game.html#game.Game.show_map">[docs]</a>
+    <span class="k">def</span> <span class="nf">show_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays the game map and handles all interactions within the game level.</span>
+
+<span class="sd">        :param str map_filename: Optional filename of the map to load, defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">position_was_reset</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">non_coll_tiles</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">map_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_level</span> <span class="o">=</span> <span class="n">map_filename</span>
+
+            <span class="c1"># Load the map from the CSV file</span>
+        <span class="n">game_map</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">map_filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+                <span class="n">game_map</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">tile_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">tile_id</span> <span class="ow">in</span> <span class="n">row</span><span class="p">])</span>
+
+        <span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">(</span><span class="n">MAP_WIDTH</span><span class="p">,</span> <span class="n">MAP_HEIGHT</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+
+            <span class="n">map_bg</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;Graphics/backgrounds/Level_BG.png&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">convert_alpha</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">map_bg</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">update_animation</span><span class="p">()</span>
+
+            <span class="c1"># Handle events</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">4864</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_level</span> <span class="o">==</span> <span class="s2">&quot;levels/level1.csv&quot;</span><span class="p">:</span>
+                <span class="n">next_level_filename</span> <span class="o">=</span> <span class="s2">&quot;levels/level2.csv&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transition_next_level</span><span class="p">(</span><span class="n">next_level_filename</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">4864</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_level</span> <span class="o">==</span> <span class="s2">&quot;levels/level2.csv&quot;</span><span class="p">:</span>
+                <span class="n">next_level_filename</span> <span class="o">=</span> <span class="s2">&quot;levels/level3.csv&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transition_next_level</span><span class="p">(</span><span class="n">next_level_filename</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="c1"># Apply gravity</span>
+            <span class="n">new_x</span><span class="p">,</span> <span class="n">new_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_gravity</span><span class="p">()</span>
+
+            <span class="c1"># Horizontal Collision Check</span>
+            <span class="n">new_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_horizontal_collision</span><span class="p">(</span><span class="n">game_map</span><span class="p">,</span> <span class="n">new_x</span><span class="p">,</span> <span class="n">non_coll_tiles</span><span class="p">)</span>
+
+            <span class="c1"># Vertical Collision Check</span>
+            <span class="n">new_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_vertical_collision</span><span class="p">(</span><span class="n">game_map</span><span class="p">,</span> <span class="n">new_y</span><span class="p">,</span> <span class="n">non_coll_tiles</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">update_position</span><span class="p">(</span><span class="n">new_x</span><span class="p">,</span> <span class="n">new_y</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_map</span><span class="p">(</span><span class="n">game_map</span><span class="p">,</span> <span class="n">non_coll_tiles</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_paused</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">projectile_manager</span><span class="o">.</span><span class="n">draw_projectiles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_respawn_menu</span><span class="p">()</span>
+            <span class="n">current_time</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">projectile_manager</span><span class="o">.</span><span class="n">update_projectiles</span><span class="p">(</span><span class="n">current_time</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_projectile_collisions</span><span class="p">()</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+            <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">position_was_reset</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Game.draw_map">
+<a class="viewcode-back" href="../game.html#game.Game.draw_map">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game_map</span><span class="p">,</span> <span class="n">non_coll_tiles</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws the game map on the screen based on tile IDs that are not specified as non-collidable.</span>
+
+<span class="sd">        :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.</span>
+<span class="sd">        :param list non_coll_tiles: A list of tile IDs that should not be drawn because they are non-collidable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">row_index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">game_map</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">col_index</span><span class="p">,</span> <span class="n">tile_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">tile_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">non_coll_tiles</span><span class="p">:</span>
+                    <span class="n">tile_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tile_images</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">tile_id</span> <span class="o">==</span> <span class="mi">15</span><span class="p">:</span>
+                        <span class="n">y_offset</span> <span class="o">=</span> <span class="n">TILE_HEIGHT</span> <span class="o">-</span> <span class="n">SPIKE_HEIGHT</span>
+                        <span class="n">tile_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">col_index</span> <span class="o">*</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">row_index</span> <span class="o">*</span> <span class="n">TILE_HEIGHT</span> <span class="o">+</span> <span class="n">y_offset</span><span class="p">,</span> <span class="n">SPIKE_WIDTH</span><span class="p">,</span> <span class="n">SPIKE_HEIGHT</span><span class="p">)</span>
+                    <span class="c1"># todo:change this according to portal size logic</span>
+                    <span class="k">elif</span> <span class="n">tile_id</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>
+                        <span class="n">y_offset</span> <span class="o">=</span> <span class="n">TILE_HEIGHT</span> <span class="o">-</span> <span class="n">CANNON_HEIGHT</span>
+                        <span class="n">tile_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">col_index</span> <span class="o">*</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">row_index</span> <span class="o">*</span> <span class="n">TILE_HEIGHT</span> <span class="o">+</span> <span class="n">y_offset</span><span class="p">,</span> <span class="n">CANNON_WIDTH</span><span class="p">,</span> <span class="n">CANNON_HEIGHT</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">tile_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">col_index</span> <span class="o">*</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">row_index</span> <span class="o">*</span> <span class="n">TILE_HEIGHT</span><span class="p">,</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">TILE_HEIGHT</span><span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">tile_image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">tile_rect</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Game.check_horizontal_collision">
+<a class="viewcode-back" href="../game.html#game.Game.check_horizontal_collision">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_horizontal_collision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game_map</span><span class="p">,</span> <span class="n">new_x</span><span class="p">,</span> <span class="n">non_coll_tiles</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks for horizontal collisions between the player and collidable tiles in the game map.</span>
+
+<span class="sd">        :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.</span>
+<span class="sd">        :param int new_x: The proposed new x-coordinate for the player, based on movement.</span>
+<span class="sd">        :param list non_coll_tiles: A list of tile IDs that the player can pass through without collision.</span>
+<span class="sd">        :return: The new x-coordinate for the player after collision checks.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">row_index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">game_map</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">col_index</span><span class="p">,</span> <span class="n">tile_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">tile_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">non_coll_tiles</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">tile_id</span> <span class="o">==</span> <span class="mi">15</span><span class="p">:</span>
+                        <span class="n">tile_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">col_index</span> <span class="o">*</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">row_index</span> <span class="o">*</span> <span class="n">TILE_HEIGHT</span> <span class="o">+</span> <span class="p">(</span><span class="n">TILE_HEIGHT</span> <span class="o">-</span> <span class="n">SPIKE_HEIGHT</span><span class="p">),</span> <span class="n">SPIKE_WIDTH</span><span class="p">,</span> <span class="n">SPIKE_HEIGHT</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">tile_id</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>
+                        <span class="n">tile_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">col_index</span> <span class="o">*</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">row_index</span> <span class="o">*</span> <span class="n">TILE_HEIGHT</span> <span class="o">+</span> <span class="p">(</span><span class="n">TILE_HEIGHT</span> <span class="o">-</span> <span class="n">CANNON_HEIGHT</span><span class="p">),</span> <span class="n">CANNON_WIDTH</span><span class="p">,</span> <span class="n">CANNON_HEIGHT</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">tile_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">col_index</span> <span class="o">*</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">row_index</span> <span class="o">*</span> <span class="n">TILE_HEIGHT</span><span class="p">,</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">TILE_HEIGHT</span><span class="p">)</span>
+
+                    <span class="n">player_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">new_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">player_rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="n">tile_rect</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">tile_id</span> <span class="o">==</span> <span class="mi">15</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">position_was_reset</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">reset_position</span><span class="p">()</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">hit_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">new_x</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">x</span><span class="p">:</span>  <span class="c1"># Moving right</span>
+                            <span class="n">new_x</span> <span class="o">=</span> <span class="n">tile_rect</span><span class="o">.</span><span class="n">left</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">width</span>
+                        <span class="k">elif</span> <span class="n">new_x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">x</span><span class="p">:</span>  <span class="c1"># Moving left</span>
+                            <span class="n">new_x</span> <span class="o">=</span> <span class="n">tile_rect</span><span class="o">.</span><span class="n">right</span>
+
+        <span class="k">return</span> <span class="n">new_x</span></div>
+
+
+<div class="viewcode-block" id="Game.check_vertical_collision">
+<a class="viewcode-back" href="../game.html#game.Game.check_vertical_collision">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_vertical_collision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game_map</span><span class="p">,</span> <span class="n">new_y</span><span class="p">,</span> <span class="n">non_coll_tiles</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks for vertical collisions between the player and collidable tiles in the game map.</span>
+
+<span class="sd">        :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.</span>
+<span class="sd">        :param int new_y: The proposed new y-coordinate for the player, based on gravity or jumping.</span>
+<span class="sd">        :param list non_coll_tiles: A list of tile IDs that the player can pass through without collision.</span>
+<span class="sd">        :return: The new y-coordinate for the player after collision checks.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">row_index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">game_map</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">col_index</span><span class="p">,</span> <span class="n">tile_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">tile_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">non_coll_tiles</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">tile_id</span> <span class="o">==</span> <span class="mi">15</span><span class="p">:</span>
+                        <span class="n">tile_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">col_index</span> <span class="o">*</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">row_index</span> <span class="o">*</span> <span class="n">TILE_HEIGHT</span> <span class="o">+</span> <span class="p">(</span><span class="n">TILE_HEIGHT</span> <span class="o">-</span> <span class="n">SPIKE_HEIGHT</span><span class="p">),</span> <span class="n">SPIKE_WIDTH</span><span class="p">,</span> <span class="n">SPIKE_HEIGHT</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">tile_id</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>
+                        <span class="n">tile_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">col_index</span> <span class="o">*</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">row_index</span> <span class="o">*</span> <span class="n">TILE_HEIGHT</span> <span class="o">+</span> <span class="p">(</span><span class="n">TILE_HEIGHT</span> <span class="o">-</span> <span class="n">CANNON_HEIGHT</span><span class="p">),</span> <span class="n">CANNON_WIDTH</span><span class="p">,</span> <span class="n">CANNON_HEIGHT</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">tile_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">col_index</span> <span class="o">*</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">row_index</span> <span class="o">*</span> <span class="n">TILE_HEIGHT</span><span class="p">,</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">TILE_HEIGHT</span><span class="p">)</span>
+
+                    <span class="n">player_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">new_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">player_rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="n">tile_rect</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">tile_id</span> <span class="o">==</span> <span class="mi">15</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">position_was_reset</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">reset_position</span><span class="p">()</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">hit_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">new_y</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">y</span><span class="p">:</span>  <span class="c1"># Falling down</span>
+                            <span class="n">new_y</span> <span class="o">=</span> <span class="n">tile_rect</span><span class="o">.</span><span class="n">top</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">height</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">vertical_velocity</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">is_jumping</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">can_jump</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="k">elif</span> <span class="n">new_y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">y</span><span class="p">:</span>  <span class="c1"># Jumping up</span>
+                            <span class="n">new_y</span> <span class="o">=</span> <span class="n">tile_rect</span><span class="o">.</span><span class="n">bottom</span>
+
+        <span class="k">return</span> <span class="n">new_y</span></div>
+
+
+<div class="viewcode-block" id="Game.check_projectile_collisions">
+<a class="viewcode-back" href="../game.html#game.Game.check_projectile_collisions">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_projectile_collisions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks for collisions between any projectile and the player, resetting the player&#39;s position if a collision occurs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">projectile</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">projectile_manager</span><span class="o">.</span><span class="n">projectiles</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="n">projectile</span><span class="o">.</span><span class="n">rect</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hit_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">reset_position</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;kulka trefila&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.apply_gravity">
+<a class="viewcode-back" href="../game.html#game.Game.apply_gravity">[docs]</a>
+    <span class="k">def</span> <span class="nf">apply_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies gravity to the player, updating their vertical velocity and position.</span>
+
+<span class="sd">        :return: A tuple containing the new x and y coordinates of the player.</span>
+<span class="sd">        :rtype: tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">is_jumping</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">vertical_velocity</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">vertical_velocity</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">gravity</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">is_jumping</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">new_x</span><span class="p">,</span> <span class="n">new_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">calculate_new_position</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">new_x</span><span class="p">,</span> <span class="n">new_y</span></div>
+
+
+<div class="viewcode-block" id="Game.handle_event">
+<a class="viewcode-back" href="../game.html#game.Game.handle_event">[docs]</a>
+    <span class="k">def</span> <span class="nf">handle_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handles a single event from the pygame event queue, affecting the game state or player based on the event type.</span>
+
+<span class="sd">        :param Event event: A pygame event object to be processed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_ESCAPE</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_game_menu</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Erik Diegel.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

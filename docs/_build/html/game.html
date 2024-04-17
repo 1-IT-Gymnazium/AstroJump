@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>game module &mdash; AstroJump 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="main module" href="main.html" />
+    <link rel="prev" title="enemy module" href="enemy.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            AstroJump
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="animation.html">animation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="camera.html">camera module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enemy.html">enemy module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">game module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#game.Game"><code class="docutils literal notranslate"><span class="pre">Game</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.apply_gravity"><code class="docutils literal notranslate"><span class="pre">Game.apply_gravity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.check_horizontal_collision"><code class="docutils literal notranslate"><span class="pre">Game.check_horizontal_collision()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.check_projectile_collisions"><code class="docutils literal notranslate"><span class="pre">Game.check_projectile_collisions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.check_vertical_collision"><code class="docutils literal notranslate"><span class="pre">Game.check_vertical_collision()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.draw_button"><code class="docutils literal notranslate"><span class="pre">Game.draw_button()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.draw_map"><code class="docutils literal notranslate"><span class="pre">Game.draw_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.draw_text"><code class="docutils literal notranslate"><span class="pre">Game.draw_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.find_cannons_position"><code class="docutils literal notranslate"><span class="pre">Game.find_cannons_position()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.handle_event"><code class="docutils literal notranslate"><span class="pre">Game.handle_event()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.level_select"><code class="docutils literal notranslate"><span class="pre">Game.level_select()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.main_menu"><code class="docutils literal notranslate"><span class="pre">Game.main_menu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.settings"><code class="docutils literal notranslate"><span class="pre">Game.settings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.show_game_menu"><code class="docutils literal notranslate"><span class="pre">Game.show_game_menu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.show_map"><code class="docutils literal notranslate"><span class="pre">Game.show_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.show_respawn_menu"><code class="docutils literal notranslate"><span class="pre">Game.show_respawn_menu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.transition_next_level"><code class="docutils literal notranslate"><span class="pre">Game.transition_next_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.tutorial"><code class="docutils literal notranslate"><span class="pre">Game.tutorial()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html">player module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="settings.html">settings module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slider.html">slider module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transition.html">transition module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AstroJump</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">src</a></li>
+      <li class="breadcrumb-item active">game module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/game.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-game">
+<span id="game-module"></span><h1>game module<a class="headerlink" href="#module-game" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="game.Game">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">game.</span></span><span class="sig-name descname"><span class="pre">Game</span></span><a class="reference internal" href="_modules/game.html#Game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to manage the main game environment including initialization,
+game loops, and transitions between different states of the game such as menus and levels.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.apply_gravity">
+<span class="sig-name descname"><span class="pre">apply_gravity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.apply_gravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.apply_gravity" title="Link to this definition"></a></dt>
+<dd><p>Applies gravity to the player, updating their vertical velocity and position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple containing the new x and y coordinates of the player.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.check_horizontal_collision">
+<span class="sig-name descname"><span class="pre">check_horizontal_collision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_coll_tiles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.check_horizontal_collision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.check_horizontal_collision" title="Link to this definition"></a></dt>
+<dd><p>Checks for horizontal collisions between the player and collidable tiles in the game map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>game_map</strong> (<em>list</em>) – A 2D list representing the map where each value corresponds to a tile ID.</p></li>
+<li><p><strong>new_x</strong> (<em>int</em>) – The proposed new x-coordinate for the player, based on movement.</p></li>
+<li><p><strong>non_coll_tiles</strong> (<em>list</em>) – A list of tile IDs that the player can pass through without collision.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new x-coordinate for the player after collision checks.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.check_projectile_collisions">
+<span class="sig-name descname"><span class="pre">check_projectile_collisions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.check_projectile_collisions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.check_projectile_collisions" title="Link to this definition"></a></dt>
+<dd><p>Checks for collisions between any projectile and the player, resetting the player’s position if a collision occurs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.check_vertical_collision">
+<span class="sig-name descname"><span class="pre">check_vertical_collision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_coll_tiles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.check_vertical_collision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.check_vertical_collision" title="Link to this definition"></a></dt>
+<dd><p>Checks for vertical collisions between the player and collidable tiles in the game map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>game_map</strong> (<em>list</em>) – A 2D list representing the map where each value corresponds to a tile ID.</p></li>
+<li><p><strong>new_y</strong> (<em>int</em>) – The proposed new y-coordinate for the player, based on gravity or jumping.</p></li>
+<li><p><strong>non_coll_tiles</strong> (<em>list</em>) – A list of tile IDs that the player can pass through without collision.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new y-coordinate for the player after collision checks.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.draw_button">
+<span class="sig-name descname"><span class="pre">draw_button</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.draw_button"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.draw_button" title="Link to this definition"></a></dt>
+<dd><p>Draws a button with text centered on the screen.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to be displayed on the button.</p></li>
+<li><p><strong>rect</strong> (<em>Rect</em>) – A pygame Rect object representing the button’s position and dimensions.</p></li>
+<li><p><strong>color</strong> (<em>tuple</em>) – A tuple representing the RGB color of the button.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.draw_map">
+<span class="sig-name descname"><span class="pre">draw_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_coll_tiles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.draw_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.draw_map" title="Link to this definition"></a></dt>
+<dd><p>Draws the game map on the screen based on tile IDs that are not specified as non-collidable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>game_map</strong> (<em>list</em>) – A 2D list representing the map where each value corresponds to a tile ID.</p></li>
+<li><p><strong>non_coll_tiles</strong> (<em>list</em>) – A list of tile IDs that should not be drawn because they are non-collidable.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.draw_text">
+<span class="sig-name descname"><span class="pre">draw_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.draw_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.draw_text" title="Link to this definition"></a></dt>
+<dd><p>Draws text on the game screen at a specified position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to be displayed.</p></li>
+<li><p><strong>font</strong> (<em>Font</em>) – A pygame Font object used to render the text.</p></li>
+<li><p><strong>color</strong> (<em>tuple</em>) – A tuple representing the RGB color of the text.</p></li>
+<li><p><strong>x</strong> (<em>int</em>) – The x-coordinate of the text position.</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – The y-coordinate of the text position.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.find_cannons_position">
+<span class="sig-name descname"><span class="pre">find_cannons_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_id_to_find</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.find_cannons_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.find_cannons_position" title="Link to this definition"></a></dt>
+<dd><p>Searches the current level’s map file for specific tiles, returning their positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tile_id_to_find</strong> (<em>int</em>) – The tile ID to search for in the map.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of tuples indicating the positions (column, row) of found tiles.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.handle_event">
+<span class="sig-name descname"><span class="pre">handle_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.handle_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.handle_event" title="Link to this definition"></a></dt>
+<dd><p>Handles a single event from the pygame event queue, affecting the game state or player based on the event type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>Event</em>) – A pygame event object to be processed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.level_select">
+<span class="sig-name descname"><span class="pre">level_select</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.level_select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.level_select" title="Link to this definition"></a></dt>
+<dd><p>Displays the level selection menu and handles level loading based on user interaction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.main_menu">
+<span class="sig-name descname"><span class="pre">main_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.main_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.main_menu" title="Link to this definition"></a></dt>
+<dd><p>Handles the main menu loop, processing events and updating the display.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.settings">
+<span class="sig-name descname"><span class="pre">settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.settings" title="Link to this definition"></a></dt>
+<dd><p>Displays the settings menu where users can adjust preferences like sound volume.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.show_game_menu">
+<span class="sig-name descname"><span class="pre">show_game_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.show_game_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.show_game_menu" title="Link to this definition"></a></dt>
+<dd><p>Displays the in-game menu and handles navigation based on user interaction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.show_map">
+<span class="sig-name descname"><span class="pre">show_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.show_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.show_map" title="Link to this definition"></a></dt>
+<dd><p>Displays the game map and handles all interactions within the game level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>map_filename</strong> (<em>str</em>) – Optional filename of the map to load, defaults to None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.show_respawn_menu">
+<span class="sig-name descname"><span class="pre">show_respawn_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.show_respawn_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.show_respawn_menu" title="Link to this definition"></a></dt>
+<dd><p>Displays the respawn menu when the player dies and handles the actions based on user interaction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.transition_next_level">
+<span class="sig-name descname"><span class="pre">transition_next_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">next_level_filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.transition_next_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.transition_next_level" title="Link to this definition"></a></dt>
+<dd><p>Manages the transition to the next level, including loading the new level map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>next_level_filename</strong> (<em>str</em>) – The filename of the next level to load.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.tutorial">
+<span class="sig-name descname"><span class="pre">tutorial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.tutorial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.tutorial" title="Link to this definition"></a></dt>
+<dd><p>Displays the tutorial screen and handles interactions within the tutorial.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="enemy.html" class="btn btn-neutral float-left" title="enemy module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="main.html" class="btn btn-neutral float-right" title="main module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Erik Diegel.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
