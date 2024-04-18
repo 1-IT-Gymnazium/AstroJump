@@ -5,8 +5,7 @@ from animation import load_images, Animation
 
 class Player:
     """
-    Represents a player character in a game with capabilities such as movement,
-    jumping, and animation handling based on the state.
+    Represents a player character in a game with capabilities such as movement, jumping, and animation handling based on the state.
 
     :param x: Initial x-coordinate of the player.
     :param y: Initial y-coordinate of the player.
@@ -45,8 +44,7 @@ class Player:
 
     def update_animation(self):
         """
-        Updates the player's animation state based on the movement and jumping
-        flags.
+        Updates the player's animation state based on the movement and jumping flags.
         """
         if self.is_jumping:
             self.current_animation = "player_jump"
@@ -57,11 +55,9 @@ class Player:
 
     def draw(self, camera):
         """
-        Draws the player on the screen based on the current animation frame and
-        camera view.
+        Draws the player on the screen based on the current animation frame and camera view.
 
-        :param camera: Camera object that handles viewport and projection
-        transformations.
+        :param camera: Camera object that handles viewport and projection transformations.
         """
         current_animation = self.assets[self.current_animation]
         current_animation.update()
@@ -108,11 +104,9 @@ class Player:
 
     def calculate_new_position(self):
         """
-        Calculates the new position of the player based on current movement
-        and gravity.
+        Calculates the new position of the player based on current movement and gravity.
 
-        :return: Tuple (new_x, new_y) representing the new position
-        coordinates.
+        :return: Tuple (new_x, new_y) representing the new position coordinates.
         """
         new_x = self.x
         new_y = self.y

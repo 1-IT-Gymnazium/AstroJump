@@ -74,6 +74,7 @@
 <span></span><span class="kn">import</span> <span class="nn">pygame</span>
 <span class="kn">from</span> <span class="nn">settings</span> <span class="kn">import</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">TILE_HEIGHT</span>
 
+
 <div class="viewcode-block" id="Projectile">
 <a class="viewcode-back" href="../enemy.html#enemy.Projectile">[docs]</a>
 <span class="k">class</span> <span class="nc">Projectile</span><span class="p">:</span>
@@ -85,12 +86,14 @@
 <span class="sd">    :param direction: Direction for the projectile to move (&#39;left&#39; or &#39;right&#39;).</span>
 <span class="sd">    :param speed: Movement speed of the projectile, defaults to 10.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">direction</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">speed</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;Graphics/laser_bullet/laser_bullet.png&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+            <span class="s2">&quot;Graphics/laser_bullet/laser_bullet.png&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_rect</span><span class="p">(</span><span class="n">topleft</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
 
 <div class="viewcode-block" id="Projectile.update">
@@ -117,7 +120,8 @@
 <span class="sd">        :param camera: Camera object that handles viewport and projection transformations.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">camera_x</span><span class="p">,</span> <span class="n">camera_y</span> <span class="o">=</span> <span class="n">camera</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">topleft</span>
-        <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">camera_x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">camera_y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">40</span><span class="p">))</span></div>
+        <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                    <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">camera_x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">camera_y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">40</span><span class="p">))</span></div>
 </div>
 
 
@@ -130,6 +134,7 @@
 
 <span class="sd">    :param game: Reference to the main game object which holds game-wide information and states.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">projectiles</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_shot_time</span> <span class="o">=</span> <span class="mi">0</span>
@@ -161,7 +166,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">projectile_x</span><span class="p">,</span> <span class="n">projectile_y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">find_cannons_position</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">projectile_x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">projectile_y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">projectiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Projectile</span><span class="p">(</span><span class="n">projectile_x</span> <span class="o">*</span> <span class="n">TILE_WIDTH</span><span class="p">,</span> <span class="n">projectile_y</span> <span class="o">*</span> <span class="n">TILE_HEIGHT</span><span class="p">,</span> <span class="s2">&quot;left&quot;</span><span class="p">))</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">projectiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Projectile</span><span class="p">(</span><span class="n">projectile_x</span> <span class="o">*</span> <span class="n">TILE_WIDTH</span><span class="p">,</span>
+                                                   <span class="n">projectile_y</span> <span class="o">*</span> <span class="n">TILE_HEIGHT</span><span class="p">,</span>
+                                                   <span class="s2">&quot;left&quot;</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="ProjectileManager.draw_projectiles">
@@ -177,8 +184,6 @@
             <span class="n">projectile</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="n">camera</span><span class="p">)</span></div>
 </div>
 
-            <span class="c1"># debugging hit box outline</span>
-            <span class="c1"># pygame.draw.rect(screen, (255, 0, 0), camera.apply(projectile.rect), 1)</span>
 </pre></div>
 
            </div>
