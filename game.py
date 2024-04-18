@@ -1,6 +1,9 @@
 import pygame
 import sys
-from settings import *
+from settings import (WINDOW_WIDTH, WINDOW_HEIGHT, MAP_WIDTH, MAP_HEIGHT,
+                      BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_GAP, TILE_HEIGHT,
+                      TILE_WIDTH, SPIKE_HEIGHT, SPIKE_WIDTH, CANNON_HEIGHT,
+                      CANNON_WIDTH)
 import csv
 from player import Player
 from camera import Camera
@@ -9,33 +12,19 @@ from transition import circular_fade
 from enemy import ProjectileManager
 
 
-# TODOS:
-
-# todo: split up code into multiple smaller functions and refactor some functions into classes
-# todo: resize portal block, figure out how to import it as a 64X128 tile instead of 64X64, make it work as the level end transition to the next level
-# todo: create final layouts of all 3 levels
-# todo: create documentation with external program
-# todo: import sounds for sound effects like jumping, getting hit, dying etc... (jumping sound already added)
-# todo: work on optimization
-# todo: fix player transparent glasses drawing issue
-
-# todo: (Optional) create double jump
-# todo: (Optional) make more stuff for menu like more settings options etc...
-# todo: (Optional) add visual effects like particles etc. ..
-
-
 class Game:
     """
     A class to manage the main game environment including initialization,
-    game loops, and transitions between different states of the game such as menus and levels.
+    game loops, and transitions between different states of the game such as
+    menus and levels.
 
-    :param none: This class constructor takes no parameters.
+    :param: This class constructor takes no parameters.
     """
 
     def __init__(self):
-
         """
-        Initializes the game environment, setting up the screen, loading resources, and initializing game components.
+        Initializes the game environment, setting up the screen, loading
+        resources, and initializing game components.
         """
 
         pygame.init()
@@ -43,7 +32,8 @@ class Game:
         pygame.display.set_caption("AstroJump")
 
         num_tiles = 17
-        self.tile_images = [pygame.image.load(f'Graphics/tiles/{i}.png') for i in range(num_tiles)]
+        self.tile_images = [pygame.image.load(f'Graphics/tiles/{i}.png') for i
+                            in range(num_tiles)]
 
         # colors
         self.white = (255, 255, 255)
@@ -64,7 +54,8 @@ class Game:
         self.music_slider = Slider(810, 700, 300, 40, 0, 1, 0.5)
 
         # fonts
-        self.font_custom = pygame.font.Font("Graphics/fonts/pixel_font.ttf", 50)
+        self.font_custom = pygame.font.Font("Graphics/fonts/pixel_font.ttf",
+                                            50)
 
         # sounds
         self.button_sound = pygame.mixer.Sound("Sounds/button_sound3.mp3")
@@ -86,7 +77,6 @@ class Game:
         self.game_paused = False
 
     def draw_text(self, text, font, color, x, y):
-
         """
         Draws text on the game screen at a specified position.
 
@@ -102,12 +92,12 @@ class Game:
         self.screen.blit(text_obj, text_rect)
 
     def draw_button(self, text, rect, color):
-
         """
         Draws a button with text centered on the screen.
 
         :param str text: The text to be displayed on the button.
-        :param Rect rect: A pygame Rect object representing the button's position and dimensions.
+        :param Rect rect: A pygame Rect object representing the button's
+        position and dimensions.
         :param tuple color: A tuple representing the RGB color of the button.
         """
 
@@ -125,24 +115,39 @@ class Game:
             bg = pygame.image.load("Graphics/backgrounds/BG.png")
             self.screen.blit(bg, (0, 0))
 
-            self.draw_text("Astro Jump", self.font_custom, self.white, WINDOW_WIDTH // 2, 300)
+            self.draw_text("Astro Jump", self.font_custom, self.white,
+                           WINDOW_WIDTH // 2, 300)
 
             mx, my = pygame.mouse.get_pos()
 
-            play_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT)
-            tutorial_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 500, BUTTON_WIDTH, BUTTON_HEIGHT)
-            settings_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH, BUTTON_HEIGHT)
-            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 700, BUTTON_WIDTH, BUTTON_HEIGHT)
+            play_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                      400, BUTTON_WIDTH, BUTTON_HEIGHT)
+            tutorial_button = pygame.Rect(
+                WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 500, BUTTON_WIDTH,
+                BUTTON_HEIGHT)
+            settings_button = pygame.Rect(
+                WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH,
+                BUTTON_HEIGHT)
+            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                      700, BUTTON_WIDTH, BUTTON_HEIGHT)
 
             play_hovered = play_button.collidepoint((mx, my))
             tutorial_hovered = tutorial_button.collidepoint((mx, my))
             settings_hovered = settings_button.collidepoint((mx, my))
             quit_hovered = quit_button.collidepoint((mx, my))
 
-            self.draw_button("Play", play_button, self.hover_color if play_hovered else self.button_color)
-            self.draw_button("Tutorial", tutorial_button, self.hover_color if tutorial_hovered else self.button_color)
-            self.draw_button("Settings", settings_button, self.hover_color if settings_hovered else self.button_color)
-            self.draw_button("Quit Game", quit_button, self.quit_button_hover_color if quit_hovered else self.quit_button_color)
+            self.draw_button("Play", play_button,
+                             self.hover_color if play_hovered else
+                             self.button_color)
+            self.draw_button("Tutorial", tutorial_button,
+                             self.hover_color if tutorial_hovered else
+                             self.button_color)
+            self.draw_button("Settings", settings_button,
+                             self.hover_color if settings_hovered else
+                             self.button_color)
+            self.draw_button("Quit Game", quit_button,
+                             self.quit_button_hover_color if quit_hovered else
+                             self.quit_button_color)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -172,33 +177,47 @@ class Game:
             pygame.display.update()
 
     def level_select(self):
-
         """
-        Displays the level selection menu and handles level loading based on user interaction.
+        Displays the level selection menu and handles level loading based on
+        user interaction.
         """
 
         while True:
             level_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
             self.screen.blit(level_bg, (0, 0))
 
-            self.draw_text("Select a Level", self.font_custom, self.white, WINDOW_WIDTH // 2, 175)
+            self.draw_text("Select a Level", self.font_custom, self.white,
+                           WINDOW_WIDTH // 2, 175)
 
             mx, my = pygame.mouse.get_pos()
 
-            return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 800, BUTTON_WIDTH, BUTTON_HEIGHT)
-            level1 = pygame.Rect((WINDOW_WIDTH - 3 * BUTTON_WIDTH - 2 * BUTTON_GAP) // 2, 250, BUTTON_WIDTH, BUTTON_HEIGHT)
-            level2 = pygame.Rect(level1.right + BUTTON_GAP, 250, BUTTON_WIDTH, BUTTON_HEIGHT)
-            level3 = pygame.Rect(level2.right + BUTTON_GAP, 250, BUTTON_WIDTH, BUTTON_HEIGHT)
+            return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                        800, BUTTON_WIDTH, BUTTON_HEIGHT)
+            level1 = pygame.Rect(
+                (WINDOW_WIDTH - 3 * BUTTON_WIDTH - 2 * BUTTON_GAP) // 2, 250,
+                BUTTON_WIDTH, BUTTON_HEIGHT)
+            level2 = pygame.Rect(level1.right + BUTTON_GAP, 250, BUTTON_WIDTH,
+                                 BUTTON_HEIGHT)
+            level3 = pygame.Rect(level2.right + BUTTON_GAP, 250, BUTTON_WIDTH,
+                                 BUTTON_HEIGHT)
 
             return_hovered = return_button.collidepoint((mx, my))
             level1_hovered = level1.collidepoint((mx, my))
             level2_hovered = level2.collidepoint((mx, my))
             level3_hovered = level3.collidepoint((mx, my))
 
-            self.draw_button("Return", return_button, self.hover_color if return_hovered else self.button_color)
-            self.draw_button("Level 1", level1, self.hover_color if level1_hovered else self.button_color)
-            self.draw_button("Level 2", level2, self.hover_color if level2_hovered else self.button_color)
-            self.draw_button("Level 3", level3, self.hover_color if level3_hovered else self.button_color)
+            self.draw_button("Return", return_button,
+                             self.hover_color if return_hovered else
+                             self.button_color)
+            self.draw_button("Level 1", level1,
+                             self.hover_color if level1_hovered else
+                             self.button_color)
+            self.draw_button("Level 2", level2,
+                             self.hover_color if level2_hovered else
+                             self.button_color)
+            self.draw_button("Level 3", level3,
+                             self.hover_color if level3_hovered else
+                             self.button_color)
 
             if level1.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
@@ -241,30 +260,40 @@ class Game:
             pygame.display.update()
 
     def tutorial(self):
-
         """
-        Displays the tutorial screen and handles interactions within the tutorial.
+        Displays the tutorial screen and handles interactions within the
+        tutorial.
         """
 
         while True:
-            tutorial_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
+            tutorial_bg = pygame.image.load(
+                "Graphics/backgrounds/Level_BG.png")
             self.screen.blit(tutorial_bg, (0, 0))
 
             mx, my = pygame.mouse.get_pos()
 
-            return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 900, BUTTON_WIDTH, BUTTON_HEIGHT)
+            return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                        900, BUTTON_WIDTH, BUTTON_HEIGHT)
             page1 = pygame.Rect((WINDOW_WIDTH // 2) - 250, 300, 500, 400)
 
             return_hovered = return_button.collidepoint((mx, my))
 
-            self.draw_button("Return", return_button, self.hover_color if return_hovered else self.button_color)
-            pygame.draw.rect(self.screen, self.button_color, page1, border_radius=30)
+            self.draw_button("Return", return_button,
+                             self.hover_color if return_hovered else
+                             self.button_color)
+            pygame.draw.rect(self.screen, self.button_color, page1,
+                             border_radius=30)
 
-            self.draw_text("Tutorial", self.font_custom, self.white, WINDOW_WIDTH // 2, 175)
-            self.draw_text("Return", self.font_custom, self.white, return_button.centerx, return_button.centery)
-            self.draw_text("A - move left", self.font_custom, self.white, page1.centerx, 350)
-            self.draw_text("D - move right", self.font_custom, self.white, page1.centerx, 450)
-            self.draw_text("Space - jump", self.font_custom, self.white, page1.centerx, 550)
+            self.draw_text("Tutorial", self.font_custom, self.white,
+                           WINDOW_WIDTH // 2, 175)
+            self.draw_text("Return", self.font_custom, self.white,
+                           return_button.centerx, return_button.centery)
+            self.draw_text("A - move left", self.font_custom, self.white,
+                           page1.centerx, 350)
+            self.draw_text("D - move right", self.font_custom, self.white,
+                           page1.centerx, 450)
+            self.draw_text("Space - jump", self.font_custom, self.white,
+                           page1.centerx, 550)
 
             if return_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
@@ -283,25 +312,32 @@ class Game:
             pygame.display.update()
 
     def settings(self):
-
         """
-        Displays the settings menu where users can adjust preferences like sound volume.
+        Displays the settings menu where users can adjust preferences like
+        sound volume.
         """
 
         while True:
-            tutorial_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
+            tutorial_bg = pygame.image.load(
+                "Graphics/backgrounds/Level_BG.png")
             self.screen.blit(tutorial_bg, (0, 0))
 
             mx, my = pygame.mouse.get_pos()
 
-            return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 900, BUTTON_WIDTH, BUTTON_HEIGHT)
+            return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                        900, BUTTON_WIDTH, BUTTON_HEIGHT)
 
             return_hovered = return_button.collidepoint((mx, my))
 
-            self.draw_button("Return", return_button, self.hover_color if return_hovered else self.button_color)
-            self.draw_text("Settings", self.font_custom, self.white, WINDOW_WIDTH // 2, 175)
-            self.draw_text("SFX volume", self.font_custom, self.white, WINDOW_WIDTH // 2, 350)
-            self.draw_text("Music volume", self.font_custom, self.white, WINDOW_WIDTH // 2, 650)
+            self.draw_button("Return", return_button,
+                             self.hover_color if return_hovered else
+                             self.button_color)
+            self.draw_text("Settings", self.font_custom, self.white,
+                           WINDOW_WIDTH // 2, 175)
+            self.draw_text("SFX volume", self.font_custom, self.white,
+                           WINDOW_WIDTH // 2, 350)
+            self.draw_text("Music volume", self.font_custom, self.white,
+                           WINDOW_WIDTH // 2, 650)
 
             self.sfx_slider.draw(self.screen)
             self.music_slider.draw(self.screen)
@@ -330,14 +366,18 @@ class Game:
             pygame.display.update()
 
     def show_respawn_menu(self):
-
         """
-        Displays the respawn menu when the player dies and handles the actions based on user interaction.
+        Displays the respawn menu when the player dies and handles the actions
+        based on user interaction.
         """
 
-        main_menu_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2 - 20, 500, 300, BUTTON_HEIGHT)
-        respawn_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT)
-        quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH, BUTTON_HEIGHT)
+        main_menu_button = pygame.Rect(
+            WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2 - 20, 500, 300,
+            BUTTON_HEIGHT)
+        respawn_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                     400, BUTTON_WIDTH, BUTTON_HEIGHT)
+        quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600,
+                                  BUTTON_WIDTH, BUTTON_HEIGHT)
 
         mx, my = pygame.mouse.get_pos()
         main_menu_hovered = main_menu_button.collidepoint((mx, my))
@@ -347,10 +387,17 @@ class Game:
         if self.player.y > 1800:
             self.game_paused = True
             self.screen.fill((0, 0, 0))
-            self.draw_text("You fell into the abyss", self.font_custom, self.quit_button_color, WINDOW_WIDTH // 2, 175)
-            self.draw_button("Main menu", main_menu_button, self.hover_color if main_menu_hovered else self.button_color)
-            self.draw_button("Respawn", respawn_button, self.hover_color if respawn_hovered else self.button_color)
-            self.draw_button("Quit", quit_button, self.quit_button_hover_color if quit_hovered else self.quit_button_color)
+            self.draw_text("You fell into the abyss", self.font_custom,
+                           self.quit_button_color, WINDOW_WIDTH // 2, 175)
+            self.draw_button("Main menu", main_menu_button,
+                             self.hover_color if main_menu_hovered else
+                             self.button_color)
+            self.draw_button("Respawn", respawn_button,
+                             self.hover_color if respawn_hovered else
+                             self.button_color)
+            self.draw_button("Quit", quit_button,
+                             self.quit_button_hover_color if quit_hovered else
+                             self.quit_button_color)
 
             if respawn_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
@@ -380,30 +427,45 @@ class Game:
                     sys.exit()
 
     def show_game_menu(self):
-
         """
-        Displays the in-game menu and handles navigation based on user interaction.
+        Displays the in-game menu and handles navigation based on user
+        interaction.
         """
 
         while True:
             mx, my = pygame.mouse.get_pos()
 
-            resume_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT)
-            settings_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 500, BUTTON_WIDTH, BUTTON_HEIGHT)
-            main_menu_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH, BUTTON_HEIGHT)
-            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 700, BUTTON_WIDTH, BUTTON_HEIGHT)
+            resume_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                        400, BUTTON_WIDTH, BUTTON_HEIGHT)
+            settings_button = pygame.Rect(
+                WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 500, BUTTON_WIDTH,
+                BUTTON_HEIGHT)
+            main_menu_button = pygame.Rect(
+                WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH,
+                BUTTON_HEIGHT)
+            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                      700, BUTTON_WIDTH, BUTTON_HEIGHT)
 
             resume_hovered = resume_button.collidepoint((mx, my))
             quit_hovered = quit_button.collidepoint((mx, my))
             settings_hovered = settings_button.collidepoint((mx, my))
             main_menu_hovered = main_menu_button.collidepoint((mx, my))
 
-            tutorial_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
+            tutorial_bg = pygame.image.load(
+                "Graphics/backgrounds/Level_BG.png")
             self.screen.blit(tutorial_bg, (0, 0))
-            self.draw_button("Resume", resume_button, self.hover_color if resume_hovered else self.button_color)
-            self.draw_button("Quit", quit_button, self.quit_button_hover_color if quit_hovered else self.quit_button_color)
-            self.draw_button("Settings", settings_button, self.hover_color if settings_hovered else self.button_color)
-            self.draw_button("Menu", main_menu_button, self.hover_color if main_menu_hovered else self.button_color)
+            self.draw_button("Resume", resume_button,
+                             self.hover_color if resume_hovered else
+                             self.button_color)
+            self.draw_button("Quit", quit_button,
+                             self.quit_button_hover_color if quit_hovered else
+                             self.quit_button_color)
+            self.draw_button("Settings", settings_button,
+                             self.hover_color if settings_hovered else
+                             self.button_color)
+            self.draw_button("Menu", main_menu_button,
+                             self.hover_color if main_menu_hovered else
+                             self.button_color)
 
             if resume_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
@@ -441,9 +503,9 @@ class Game:
             pygame.display.update()
 
     def transition_next_level(self, next_level_filename):
-
         """
-        Manages the transition to the next level, including loading the new level map.
+        Manages the transition to the next level, including loading the new
+        level map.
 
         :param str next_level_filename: The filename of the next level to load.
         """
@@ -453,12 +515,13 @@ class Game:
         self.show_map(next_level_filename)
 
     def find_cannons_position(self, tile_id_to_find):
-
         """
-        Searches the current level's map file for specific tiles, returning their positions.
+        Searches the current level's map file for specific tiles, returning
+        their positions.
 
         :param int tile_id_to_find: The tile ID to search for in the map.
-        :return: A list of tuples indicating the positions (column, row) of found tiles.
+        :return: A list of tuples indicating the positions (column, row) of
+        found tiles.
         :rtype: list
         """
 
@@ -475,30 +538,44 @@ class Game:
 
     def show_win_menu(self):
         """
-        Displays the win menu after a game victory. This menu provides options to return to the main menu or quit the game.
+        Displays the win menu after a game victory. This menu provides options
+        to return to the main menu or quit the game.
 
-        The method continuously checks for mouse position and button clicks to respond to user interactions:
+        The method continuously checks for mouse position and button clicks to
+        respond to user interactions:
         - Displays a "YOU WON!!!" message and two buttons: "Menu" and "Quit".
-        - If the "Menu" button is clicked, it resets the player's position, plays a button sound, starts background music, applies a fade-out effect, and returns to the main menu.
+        - If the "Menu" button is clicked, it resets the player's position,
+        plays a button sound, starts background music, applies a fade-out
+        effect, and returns to the main menu.
         - If the "Quit" button is clicked, it quits the application.
         - The user can also press the ESC key to exit the win menu.
 
-        This loop runs indefinitely until an exit condition is triggered (either button click or quitting the event).
+        This loop runs indefinitely until an exit condition is triggered
+        (either button click or quitting the event).
         """
         while True:
             mx, my = pygame.mouse.get_pos()
 
-            main_menu_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH, BUTTON_HEIGHT)
-            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 700, BUTTON_WIDTH, BUTTON_HEIGHT)
+            main_menu_button = pygame.Rect(
+                WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH,
+                BUTTON_HEIGHT)
+            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                      700, BUTTON_WIDTH, BUTTON_HEIGHT)
 
             quit_hovered = quit_button.collidepoint((mx, my))
             main_menu_hovered = main_menu_button.collidepoint((mx, my))
 
-            tutorial_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
+            tutorial_bg = pygame.image.load(
+                "Graphics/backgrounds/Level_BG.png")
             self.screen.blit(tutorial_bg, (0, 0))
-            self.draw_text("YOU WON!!!", self.font_custom, self.white, WINDOW_WIDTH // 2, 250)
-            self.draw_button("Quit", quit_button, self.quit_button_hover_color if quit_hovered else self.quit_button_color)
-            self.draw_button("Menu", main_menu_button, self.hover_color if main_menu_hovered else self.button_color)
+            self.draw_text("YOU WON!!!", self.font_custom, self.white,
+                           WINDOW_WIDTH // 2, 250)
+            self.draw_button("Quit", quit_button,
+                             self.quit_button_hover_color if quit_hovered else
+                             self.quit_button_color)
+            self.draw_button("Menu", main_menu_button,
+                             self.hover_color if main_menu_hovered else
+                             self.button_color)
 
             if main_menu_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
@@ -526,11 +603,12 @@ class Game:
             pygame.display.update()
 
     def show_map(self, map_filename=None):
-
         """
-        Displays the game map and handles all interactions within the game level.
+        Displays the game map and handles all interactions within the game
+        level.
 
-        :param str map_filename: Optional filename of the map to load, defaults to None.
+        :param str map_filename: Optional filename of the map to load,
+        defaults to None.
         """
 
         self.player.position_was_reset = False
@@ -550,7 +628,8 @@ class Game:
 
         while True:
 
-            map_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png").convert_alpha()
+            map_bg = pygame.image.load(
+                "Graphics/backgrounds/Level_BG.png").convert_alpha()
             self.screen.blit(map_bg, (0, 0))
             self.player.update_animation()
 
@@ -558,34 +637,40 @@ class Game:
             for event in pygame.event.get():
                 self.handle_event(event)
 
-            if self.player.x > 4864 and self.current_level == "levels/level1.csv":
+            if (self.player.x > 4864 and self.current_level ==
+                    "levels/level1.csv"):
                 next_level_filename = "levels/level2.csv"
                 self.transition_next_level(next_level_filename)
                 return
 
-            if self.player.x > 4864 and self.current_level == "levels/level2.csv":
+            if (self.player.x > 4864 and self.current_level ==
+                    "levels/level2.csv"):
                 next_level_filename = "levels/level3.csv"
                 self.transition_next_level(next_level_filename)
                 return
 
-            if self.player.x > 4864 and self.current_level == "levels/level3.csv":
+            if (self.player.x > 4864 and self.current_level ==
+                    "levels/level3.csv"):
                 self.show_win_menu()
 
             # Apply gravity
             new_x, new_y = self.apply_gravity()
 
             # Horizontal Collision Check
-            new_x = self.check_horizontal_collision(game_map, new_x, non_coll_tiles)
+            new_x = self.check_horizontal_collision(game_map, new_x,
+                                                    non_coll_tiles)
 
             # Vertical Collision Check
-            new_y = self.check_vertical_collision(game_map, new_y, non_coll_tiles)
+            new_y = self.check_vertical_collision(game_map, new_y,
+                                                  non_coll_tiles)
 
             self.player.update_position(new_x, new_y)
             self.draw_map(game_map, non_coll_tiles)
             self.player.draw(self.camera)
             self.camera.update(self.player)
             if self.game_paused is False:
-                self.projectile_manager.draw_projectiles(self.screen, self.camera)
+                self.projectile_manager.draw_projectiles(self.screen,
+                                                         self.camera)
             self.show_respawn_menu()
             current_time = pygame.time.get_ticks() / 1000
             self.projectile_manager.update_projectiles(current_time)
@@ -596,10 +681,13 @@ class Game:
 
     def draw_map(self, game_map, non_coll_tiles):
         """
-        Draws the game map on the screen based on tile IDs that are not specified as non-collidable.
+        Draws the game map on the screen based on tile IDs that are not
+        specified as non-collidable.
 
-        :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.
-        :param list non_coll_tiles: A list of tile IDs that should not be drawn because they are non-collidable.
+        :param list game_map: A 2D list representing the map where each value
+        corresponds to a tile ID.
+        :param list non_coll_tiles: A list of tile IDs that should not be drawn
+        because they are non-collidable.
         """
 
         for row_index, row in enumerate(game_map):
@@ -608,22 +696,34 @@ class Game:
                     tile_image = self.tile_images[tile_id]
                     if tile_id == 15:
                         y_offset = TILE_HEIGHT - SPIKE_HEIGHT
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + y_offset, SPIKE_WIDTH, SPIKE_HEIGHT)
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
+                                                row_index * TILE_HEIGHT +
+                                                y_offset,
+                                                SPIKE_WIDTH, SPIKE_HEIGHT)
                     elif tile_id == 16:
                         y_offset = TILE_HEIGHT - CANNON_HEIGHT
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + y_offset, CANNON_WIDTH, CANNON_HEIGHT)
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
+                                                row_index * TILE_HEIGHT +
+                                                y_offset,
+                                                CANNON_WIDTH, CANNON_HEIGHT)
                     else:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT)
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
+                                                row_index * TILE_HEIGHT,
+                                                TILE_WIDTH, TILE_HEIGHT)
 
                     self.screen.blit(tile_image, self.camera.apply(tile_rect))
 
     def check_horizontal_collision(self, game_map, new_x, non_coll_tiles):
         """
-        Checks for horizontal collisions between the player and collidable tiles in the game map.
+        Checks for horizontal collisions between the player and collidable
+        tiles in the game map.
 
-        :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.
-        :param int new_x: The proposed new x-coordinate for the player, based on movement.
-        :param list non_coll_tiles: A list of tile IDs that the player can pass through without collision.
+        :param list game_map: A 2D list representing the map where each value
+        corresponds to a tile ID.
+        :param int new_x: The proposed new x-coordinate for the player, based
+        on movement.
+        :param list non_coll_tiles: A list of tile IDs that the player can pass
+        through without collision.
         :return: The new x-coordinate for the player after collision checks.
         :rtype: int
         """
@@ -632,13 +732,27 @@ class Game:
             for col_index, tile_id in enumerate(row):
                 if tile_id not in non_coll_tiles:
                     if tile_id == 15:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
+                                                row_index * TILE_HEIGHT + (
+                                                        TILE_HEIGHT
+                                                        - SPIKE_HEIGHT)
+                                                ,
+                                                SPIKE_WIDTH, SPIKE_HEIGHT)
                     elif tile_id == 16:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - CANNON_HEIGHT), CANNON_WIDTH, CANNON_HEIGHT)
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
+                                                row_index * TILE_HEIGHT + (
+                                                        TILE_HEIGHT
+                                                        - CANNON_HEIGHT)
+                                                ,
+                                                CANNON_WIDTH, CANNON_HEIGHT)
                     else:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT)
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
+                                                row_index * TILE_HEIGHT,
+                                                TILE_WIDTH, TILE_HEIGHT)
 
-                    player_rect = pygame.Rect(new_x, self.player.y, self.player.width, self.player.height)
+                    player_rect = pygame.Rect(new_x, self.player.y,
+                                              self.player.width,
+                                              self.player.height)
 
                     if player_rect.colliderect(tile_rect):
                         if tile_id == 15:
@@ -655,11 +769,15 @@ class Game:
 
     def check_vertical_collision(self, game_map, new_y, non_coll_tiles):
         """
-        Checks for vertical collisions between the player and collidable tiles in the game map.
+        Checks for vertical collisions between the player and collidable tiles
+        in the game map.
 
-        :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.
-        :param int new_y: The proposed new y-coordinate for the player, based on gravity or jumping.
-        :param list non_coll_tiles: A list of tile IDs that the player can pass through without collision.
+        :param list game_map: A 2D list representing the map where each value
+        corresponds to a tile ID.
+        :param int new_y: The proposed new y-coordinate for the player, based
+        on gravity or jumping.
+        :param list non_coll_tiles: A list of tile IDs that the player can pass
+        through without collision.
         :return: The new y-coordinate for the player after collision checks.
         :rtype: int
         """
@@ -668,13 +786,27 @@ class Game:
             for col_index, tile_id in enumerate(row):
                 if tile_id not in non_coll_tiles:
                     if tile_id == 15:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - SPIKE_HEIGHT), SPIKE_WIDTH, SPIKE_HEIGHT)
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
+                                                row_index * TILE_HEIGHT + (
+                                                        TILE_HEIGHT
+                                                        - SPIKE_HEIGHT)
+                                                ,
+                                                SPIKE_WIDTH, SPIKE_HEIGHT)
                     elif tile_id == 16:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + (TILE_HEIGHT - CANNON_HEIGHT), CANNON_WIDTH, CANNON_HEIGHT)
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
+                                                row_index * TILE_HEIGHT + (
+                                                        TILE_HEIGHT
+                                                        - CANNON_HEIGHT)
+                                                ,
+                                                CANNON_WIDTH, CANNON_HEIGHT)
                     else:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT)
+                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
+                                                row_index * TILE_HEIGHT,
+                                                TILE_WIDTH, TILE_HEIGHT)
 
-                    player_rect = pygame.Rect(self.player.x, new_y, self.player.width, self.player.height)
+                    player_rect = pygame.Rect(self.player.x, new_y,
+                                              self.player.width,
+                                              self.player.height)
 
                     if player_rect.colliderect(tile_rect):
                         if tile_id == 15:
@@ -694,7 +826,8 @@ class Game:
 
     def check_projectile_collisions(self):
         """
-        Checks for collisions between any projectile and the player, resetting the player's position if a collision occurs.
+        Checks for collisions between any projectile and the player, resetting
+        the player's position if a collision occurs.
         """
         for projectile in self.projectile_manager.projectiles:
             if self.player.rect.colliderect(projectile.rect):
@@ -703,7 +836,8 @@ class Game:
 
     def apply_gravity(self):
         """
-        Applies gravity to the player, updating their vertical velocity and position.
+        Applies gravity to the player, updating their vertical velocity and
+        position.
 
         :return: A tuple containing the new x and y coordinates of the player.
         :rtype: tuple
@@ -717,7 +851,8 @@ class Game:
 
     def handle_event(self, event):
         """
-        Handles a single event from the pygame event queue, affecting the game state or player based on the event type.
+        Handles a single event from the pygame event queue, affecting the game
+        state or player based on the event type.
 
         :param Event event: A pygame event object to be processed.
         """
