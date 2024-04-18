@@ -9,10 +9,8 @@ class Main:
 
     def __init__(self):
         """
-        Initializes the Pygame framework, sets up the main display surface in
-        fullscreen mode,
-        and creates a game clock and an instance of the Game class to manage
-        game logic.
+        Initializes the Pygame framework, sets up the main display surface in fullscreen mode,
+        and creates a game clock and an instance of the Game class to manage game logic.
         """
         pygame.init()
         self.display_surface = pygame.display.set_mode((0, 0),
@@ -22,8 +20,7 @@ class Main:
 
     def run(self):
         """
-        Runs the main game loop, updating the game state and rendering each
-        frame.
+        Runs the main game loop, updating the game state and rendering each frame.
         This loop continues indefinitely until the game is closed.
         """
         while True:

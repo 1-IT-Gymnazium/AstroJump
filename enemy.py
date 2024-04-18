@@ -4,8 +4,7 @@ from settings import TILE_WIDTH, TILE_HEIGHT
 
 class Projectile:
     """
-    Represents a projectile object in the game which can be fired and moved in
-    a specified direction.
+    Represents a projectile object in the game which can be fired and moved in a specified direction.
 
     :param x: Initial x-coordinate of the projectile.
     :param y: Initial y-coordinate of the projectile.
@@ -24,8 +23,7 @@ class Projectile:
 
     def update(self):
         """
-        Updates the position of the projectile based on its speed and
-        direction.
+        Updates the position of the projectile based on its speed and direction.
         """
         if self.direction == "right":
             self.x += self.speed
@@ -36,12 +34,10 @@ class Projectile:
 
     def draw(self, screen, camera):
         """
-        Draws the projectile on the screen at its current position adjusted by
-        the camera's top left position.
+        Draws the projectile on the screen at its current position adjusted by the camera's top left position.
 
         :param screen: Pygame surface where the projectile is to be drawn.
-        :param camera: Camera object that handles viewport and projection
-        transformations.
+        :param camera: Camera object that handles viewport and projection transformations.
         """
         camera_x, camera_y = camera.camera.topleft
         screen.blit(self.image,
@@ -52,8 +48,7 @@ class ProjectileManager:
     """
     Manages multiple projectiles, their creation, and updating within a game.
 
-    :param game: Reference to the main game object which holds game-wide
-    information and states.
+    :param game: Reference to the main game object which holds game-wide information and states.
     """
 
     def __init__(self, game):
@@ -61,13 +56,17 @@ class ProjectileManager:
         self.last_shot_time = 0
         self.game = game
 
+    def clear_projectiles(self):
+        """
+        Clears all projectiles from the list.
+        """
+        self.projectiles.clear()
+
     def update_projectiles(self, current_time):
         """
-        Updates all managed projectiles and handles the timing for spawning
-        new projectiles.
+        Updates all managed projectiles and handles the timing for spawning new projectiles.
 
-        :param current_time: Current game time to control projectile spawn
-        timing.
+        :param current_time: Current game time to control projectile spawn timing.
         """
         # Update each projectile
         for projectile in self.projectiles:
@@ -93,8 +92,7 @@ class ProjectileManager:
         Draws all managed projectiles on the screen.
 
         :param screen: Pygame surface where projectiles are to be drawn.
-        :param camera: Camera object to adjust the projectile's drawing
-        position based on the camera's view.
+        :param camera: Camera object to adjust the projectile's drawing position based on the camera's view.
         """
         for projectile in self.projectiles:
             projectile.draw(screen, camera)

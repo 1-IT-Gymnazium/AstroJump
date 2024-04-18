@@ -14,17 +14,14 @@ from enemy import ProjectileManager
 
 class Game:
     """
-    A class to manage the main game environment including initialization,
-    game loops, and transitions between different states of the game such as
-    menus and levels.
+    A class to manage the main game environment including initialization, game loops, and transitions between different states of the game such as menus and levels.
 
     :param: This class constructor takes no parameters.
     """
 
     def __init__(self):
         """
-        Initializes the game environment, setting up the screen, loading
-        resources, and initializing game components.
+        Initializes the game environment, setting up the screen, loading resources, and initializing game components.
         """
 
         pygame.init()
@@ -96,8 +93,7 @@ class Game:
         Draws a button with text centered on the screen.
 
         :param str text: The text to be displayed on the button.
-        :param Rect rect: A pygame Rect object representing the button's
-        position and dimensions.
+        :param Rect rect: A pygame Rect object representing the button's position and dimensions.
         :param tuple color: A tuple representing the RGB color of the button.
         """
 
@@ -178,8 +174,7 @@ class Game:
 
     def level_select(self):
         """
-        Displays the level selection menu and handles level loading based on
-        user interaction.
+        Displays the level selection menu and handles level loading based on user interaction.
         """
 
         while True:
@@ -261,8 +256,7 @@ class Game:
 
     def tutorial(self):
         """
-        Displays the tutorial screen and handles interactions within the
-        tutorial.
+        Displays the tutorial screen and handles interactions within the tutorial.
         """
 
         while True:
@@ -313,8 +307,7 @@ class Game:
 
     def settings(self):
         """
-        Displays the settings menu where users can adjust preferences like
-        sound volume.
+        Displays the settings menu where users can adjust preferences like sound volume.
         """
 
         while True:
@@ -367,8 +360,7 @@ class Game:
 
     def show_respawn_menu(self):
         """
-        Displays the respawn menu when the player dies and handles the actions
-        based on user interaction.
+        Displays the respawn menu when the player dies and handles the actions based on user interaction.
         """
 
         main_menu_button = pygame.Rect(
@@ -428,8 +420,7 @@ class Game:
 
     def show_game_menu(self):
         """
-        Displays the in-game menu and handles navigation based on user
-        interaction.
+        Displays the in-game menu and handles navigation based on user interaction.
         """
 
         while True:
@@ -504,11 +495,12 @@ class Game:
 
     def transition_next_level(self, next_level_filename):
         """
-        Manages the transition to the next level, including loading the new
-        level map.
+        Manages the transition to the next level, including loading the new level map.
+        Clears existing projectiles before transitioning.
 
         :param str next_level_filename: The filename of the next level to load.
         """
+        self.projectile_manager.clear_projectiles()
         self.player.reset_position()
         self.current_level = next_level_filename
         circular_fade(self.screen, "out")
@@ -516,12 +508,10 @@ class Game:
 
     def find_cannons_position(self, tile_id_to_find):
         """
-        Searches the current level's map file for specific tiles, returning
-        their positions.
+        Searches the current level's map file for specific tiles, returning their positions.
 
         :param int tile_id_to_find: The tile ID to search for in the map.
-        :return: A list of tuples indicating the positions (column, row) of
-        found tiles.
+        :return: A list of tuples indicating the positions (column, row) of found tiles.
         :rtype: list
         """
 
@@ -538,20 +528,14 @@ class Game:
 
     def show_win_menu(self):
         """
-        Displays the win menu after a game victory. This menu provides options
-        to return to the main menu or quit the game.
+        Displays the win menu after a game victory. This menu provides options to return to the main menu or quit the game.
 
-        The method continuously checks for mouse position and button clicks to
-        respond to user interactions:
+        The method continuously checks for mouse position and button clicks to respond to user interactions:
         - Displays a "YOU WON!!!" message and two buttons: "Menu" and "Quit".
-        - If the "Menu" button is clicked, it resets the player's position,
-        plays a button sound, starts background music, applies a fade-out
-        effect, and returns to the main menu.
+        - If the "Menu" button is clicked, it resets the player's position, plays a button sound, starts background music, applies a fade-out effect, and returns to the main menu.
         - If the "Quit" button is clicked, it quits the application.
-        - The user can also press the ESC key to exit the win menu.
 
-        This loop runs indefinitely until an exit condition is triggered
-        (either button click or quitting the event).
+        This loop runs indefinitely until an exit condition is triggered, (either button click or quitting the event).
         """
         while True:
             mx, my = pygame.mouse.get_pos()
@@ -596,19 +580,13 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        return
-
             pygame.display.update()
 
     def show_map(self, map_filename=None):
         """
-        Displays the game map and handles all interactions within the game
-        level.
+        Displays the game map and handles all interactions within the game level.
 
-        :param str map_filename: Optional filename of the map to load,
-        defaults to None.
+        :param str map_filename: Optional filename of the map to load, defaults to None.
         """
 
         self.player.position_was_reset = False
@@ -681,13 +659,10 @@ class Game:
 
     def draw_map(self, game_map, non_coll_tiles):
         """
-        Draws the game map on the screen based on tile IDs that are not
-        specified as non-collidable.
+        Draws the game map on the screen based on tile IDs that are not specified as non-collidable.
 
-        :param list game_map: A 2D list representing the map where each value
-        corresponds to a tile ID.
-        :param list non_coll_tiles: A list of tile IDs that should not be drawn
-        because they are non-collidable.
+        :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.
+        :param list non_coll_tiles: A list of tile IDs that should not be drawn because they are non-collidable.
         """
 
         for row_index, row in enumerate(game_map):
@@ -715,15 +690,11 @@ class Game:
 
     def check_horizontal_collision(self, game_map, new_x, non_coll_tiles):
         """
-        Checks for horizontal collisions between the player and collidable
-        tiles in the game map.
+        Checks for horizontal collisions between the player and collidable tiles in the game map.
 
-        :param list game_map: A 2D list representing the map where each value
-        corresponds to a tile ID.
-        :param int new_x: The proposed new x-coordinate for the player, based
-        on movement.
-        :param list non_coll_tiles: A list of tile IDs that the player can pass
-        through without collision.
+        :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.
+        :param int new_x: The proposed new x-coordinate for the player, based on movement.
+        :param list non_coll_tiles: A list of tile IDs that the player can pass through without collision.
         :return: The new x-coordinate for the player after collision checks.
         :rtype: int
         """
@@ -769,15 +740,11 @@ class Game:
 
     def check_vertical_collision(self, game_map, new_y, non_coll_tiles):
         """
-        Checks for vertical collisions between the player and collidable tiles
-        in the game map.
+        Checks for vertical collisions between the player and collidable tiles in the game map.
 
-        :param list game_map: A 2D list representing the map where each value
-        corresponds to a tile ID.
-        :param int new_y: The proposed new y-coordinate for the player, based
-        on gravity or jumping.
-        :param list non_coll_tiles: A list of tile IDs that the player can pass
-        through without collision.
+        :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.
+        :param int new_y: The proposed new y-coordinate for the player, based on gravity or jumping.
+        :param list non_coll_tiles: A list of tile IDs that the player can pass through without collision.
         :return: The new y-coordinate for the player after collision checks.
         :rtype: int
         """
@@ -826,8 +793,7 @@ class Game:
 
     def check_projectile_collisions(self):
         """
-        Checks for collisions between any projectile and the player, resetting
-        the player's position if a collision occurs.
+        Checks for collisions between any projectile and the player, resetting the player's position if a collision occurs.
         """
         for projectile in self.projectile_manager.projectiles:
             if self.player.rect.colliderect(projectile.rect):
@@ -836,8 +802,7 @@ class Game:
 
     def apply_gravity(self):
         """
-        Applies gravity to the player, updating their vertical velocity and
-        position.
+        Applies gravity to the player, updating their vertical velocity and position.
 
         :return: A tuple containing the new x and y coordinates of the player.
         :rtype: tuple
@@ -851,8 +816,7 @@ class Game:
 
     def handle_event(self, event):
         """
-        Handles a single event from the pygame event queue, affecting the game
-        state or player based on the event type.
+        Handles a single event from the pygame event queue, affecting the game state or player based on the event type.
 
         :param Event event: A pygame event object to be processed.
         """

@@ -3,8 +3,7 @@ import pygame
 
 class Slider:
     """
-    Represents a slider UI component that allows users to select a value by
-    moving a handle within a designated range.
+    Represents a slider UI component that allows users to select a value by moving a handle within a designated range.
 
     :param x: The x-coordinate of the top-left corner of the slider.
     :param y: The y-coordinate of the top-left corner of the slider.
@@ -37,8 +36,7 @@ class Slider:
 
     def handle_event(self, event, mx, my):
         """
-        Handles mouse events to enable dragging of the slider's handle and
-        updating the value.
+        Handles mouse events to enable dragging of the slider's handle and updating the value.
 
         :param event: The event to handle, typically from pygame's event queue.
         :param mx: The x-coordinate of the mouse position.
