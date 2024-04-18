@@ -67,6 +67,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#game.Game.show_game_menu"><code class="docutils literal notranslate"><span class="pre">Game.show_game_menu()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#game.Game.show_map"><code class="docutils literal notranslate"><span class="pre">Game.show_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#game.Game.show_respawn_menu"><code class="docutils literal notranslate"><span class="pre">Game.show_respawn_menu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.show_win_menu"><code class="docutils literal notranslate"><span class="pre">Game.show_win_menu()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#game.Game.transition_next_level"><code class="docutils literal notranslate"><span class="pre">Game.transition_next_level()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#game.Game.tutorial"><code class="docutils literal notranslate"><span class="pre">Game.tutorial()</span></code></a></li>
 </ul>
@@ -295,6 +296,18 @@ game loops, and transitions between different states of the game such as menus a
 <dt class="sig sig-object py" id="game.Game.show_respawn_menu">
 <span class="sig-name descname"><span class="pre">show_respawn_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.show_respawn_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.show_respawn_menu" title="Link to this definition"></a></dt>
 <dd><p>Displays the respawn menu when the player dies and handles the actions based on user interaction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.show_win_menu">
+<span class="sig-name descname"><span class="pre">show_win_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.show_win_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.show_win_menu" title="Link to this definition"></a></dt>
+<dd><p>Displays the win menu after a game victory. This menu provides options to return to the main menu or quit the game.</p>
+<p>The method continuously checks for mouse position and button clicks to respond to user interactions:
+- Displays a “YOU WON!!!” message and two buttons: “Menu” and “Quit”.
+- If the “Menu” button is clicked, it resets the player’s position, plays a button sound, starts background music, applies a fade-out effect, and returns to the main menu.
+- If the “Quit” button is clicked, it quits the application.
+- The user can also press the ESC key to exit the win menu.</p>
+<p>This loop runs indefinitely until an exit condition is triggered (either button click or quitting the event).</p>
 </dd></dl>
 
 <dl class="py method">
