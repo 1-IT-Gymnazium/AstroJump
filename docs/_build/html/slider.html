@@ -98,17 +98,17 @@
 <dt class="sig sig-object py" id="slider.Slider">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">slider.</span></span><span class="sig-name descname"><span class="pre">Slider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/slider.html#Slider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#slider.Slider" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class to create and manage a GUI slider control, which allows adjusting a numerical value within a defined range.</p>
+<p>Represents a slider UI component that allows users to select a value by moving a handle within a designated range.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>int</em>) – The x-coordinate of the slider on the screen.</p></li>
-<li><p><strong>y</strong> (<em>int</em>) – The y-coordinate of the slider on the screen.</p></li>
-<li><p><strong>w</strong> (<em>int</em>) – The width of the slider.</p></li>
-<li><p><strong>h</strong> (<em>int</em>) – The height of the slider.</p></li>
-<li><p><strong>min_val</strong> (<em>float</em>) – The minimum value the slider can represent.</p></li>
-<li><p><strong>max_val</strong> (<em>float</em>) – The maximum value the slider can represent.</p></li>
-<li><p><strong>start_val</strong> (<em>float</em>) – The initial value of the slider.</p></li>
+<li><p><strong>x</strong> – The x-coordinate of the top-left corner of the slider.</p></li>
+<li><p><strong>y</strong> – The y-coordinate of the top-left corner of the slider.</p></li>
+<li><p><strong>w</strong> – The width of the slider.</p></li>
+<li><p><strong>h</strong> – The height of the slider.</p></li>
+<li><p><strong>min_val</strong> – The minimum value of the slider.</p></li>
+<li><p><strong>max_val</strong> – The maximum value of the slider.</p></li>
+<li><p><strong>start_val</strong> – The initial value of the slider when first displayed.</p></li>
 </ul>
 </dd>
 </dl>
@@ -118,7 +118,7 @@
 <dd><p>Draws the slider and its handle on the given screen.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>screen</strong> (<em>Surface</em>) – The Pygame surface where the slider will be drawn.</p>
+<dd class="field-odd"><p><strong>screen</strong> – The Pygame surface to draw the slider on.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -126,13 +126,13 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="slider.Slider.handle_event">
 <span class="sig-name descname"><span class="pre">handle_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">my</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/slider.html#Slider.handle_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#slider.Slider.handle_event" title="Link to this definition"></a></dt>
-<dd><p>Handles input events related to the slider, such as mouse clicks and dragging operations.</p>
+<dd><p>Handles mouse events to enable dragging of the slider’s handle and updating the value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>event</strong> (<em>Event</em>) – The event to process.</p></li>
-<li><p><strong>mx</strong> (<em>int</em>) – The x-coordinate of the mouse during the event.</p></li>
-<li><p><strong>my</strong> (<em>int</em>) – The y-coordinate of the mouse during the event.</p></li>
+<li><p><strong>event</strong> – The event to handle, typically from pygame’s event queue.</p></li>
+<li><p><strong>mx</strong> – The x-coordinate of the mouse position.</p></li>
+<li><p><strong>my</strong> – The y-coordinate of the mouse position.</p></li>
 </ul>
 </dd>
 </dl>

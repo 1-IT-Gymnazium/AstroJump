@@ -78,23 +78,24 @@
 <a class="viewcode-back" href="../slider.html#slider.Slider">[docs]</a>
 <span class="k">class</span> <span class="nc">Slider</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A class to create and manage a GUI slider control, which allows adjusting a numerical value within a defined range.</span>
+<span class="sd">    Represents a slider UI component that allows users to select a value by moving a handle within a designated range.</span>
 
-<span class="sd">    :param int x: The x-coordinate of the slider on the screen.</span>
-<span class="sd">    :param int y: The y-coordinate of the slider on the screen.</span>
-<span class="sd">    :param int w: The width of the slider.</span>
-<span class="sd">    :param int h: The height of the slider.</span>
-<span class="sd">    :param float min_val: The minimum value the slider can represent.</span>
-<span class="sd">    :param float max_val: The maximum value the slider can represent.</span>
-<span class="sd">    :param float start_val: The initial value of the slider.</span>
+<span class="sd">    :param x: The x-coordinate of the top-left corner of the slider.</span>
+<span class="sd">    :param y: The y-coordinate of the top-left corner of the slider.</span>
+<span class="sd">    :param w: The width of the slider.</span>
+<span class="sd">    :param h: The height of the slider.</span>
+<span class="sd">    :param min_val: The minimum value of the slider.</span>
+<span class="sd">    :param max_val: The maximum value of the slider.</span>
+<span class="sd">    :param start_val: The initial value of the slider when first displayed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">start_val</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>  <span class="c1"># The background of the slider</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_val</span> <span class="o">=</span> <span class="n">min_val</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_val</span> <span class="o">=</span> <span class="n">max_val</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">start_val</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">handle_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dragging</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">start_val</span>  <span class="c1"># The current value based on the handle&#39;s position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handle_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>  <span class="c1"># The draggable handle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dragging</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Status to check if the handle is being dragged</span>
 
 <div class="viewcode-block" id="Slider.draw">
 <a class="viewcode-back" href="../slider.html#slider.Slider.draw">[docs]</a>
@@ -102,30 +103,31 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draws the slider and its handle on the given screen.</span>
 
-<span class="sd">        :param Surface screen: The Pygame surface where the slider will be drawn.</span>
+<span class="sd">        :param screen: The Pygame surface to draw the slider on.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">,</span> <span class="n">border_radius</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rect</span><span class="p">,</span> <span class="n">border_radius</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span></div>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">,</span> <span class="n">border_radius</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>  <span class="c1"># Slider background</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rect</span><span class="p">,</span> <span class="n">border_radius</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>  <span class="c1"># Slider handle</span></div>
 
 
 <div class="viewcode-block" id="Slider.handle_event">
 <a class="viewcode-back" href="../slider.html#slider.Slider.handle_event">[docs]</a>
     <span class="k">def</span> <span class="nf">handle_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Handles input events related to the slider, such as mouse clicks and dragging operations.</span>
+<span class="sd">        Handles mouse events to enable dragging of the slider&#39;s handle and updating the value.</span>
 
-<span class="sd">        :param Event event: The event to process.</span>
-<span class="sd">        :param int mx: The x-coordinate of the mouse during the event.</span>
-<span class="sd">        :param int my: The y-coordinate of the mouse during the event.</span>
+<span class="sd">        :param event: The event to handle, typically from pygame&#39;s event queue.</span>
+<span class="sd">        :param mx: The x-coordinate of the mouse position.</span>
+<span class="sd">        :param my: The y-coordinate of the mouse position.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rect</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rect</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">)):</span>  <span class="c1"># Check if the mouse is over the handle</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dragging</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONUP</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dragging</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEMOTION</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dragging</span><span class="p">:</span>
+            <span class="c1"># Update handle position and calculate the new value</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">handle_rect</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">mx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_rect</span><span class="o">.</span><span class="n">width</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_val</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_val</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_val</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_rect</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">width</span><span class="p">)</span></div>
 </div>

@@ -101,26 +101,23 @@
 <dt class="sig sig-object py" id="animation.Animation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">animation.</span></span><span class="sig-name descname"><span class="pre">Animation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_dur</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/animation.html#Animation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#animation.Animation" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class to manage animations by cycling through a list of images based on a specified duration and looping behavior.</p>
+<p>Manages an animation sequence from a list of images, with control over the frame duration and looping behavior.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>images</strong> (<em>list</em>) – A list of pygame.Surface objects representing the animation frames.</p></li>
-<li><p><strong>img_dur</strong> (<em>int</em>) – The duration each image should be displayed, in game frames.</p></li>
-<li><p><strong>loop</strong> (<em>bool</em>) – Whether the animation should loop back to the start upon reaching the end.</p></li>
+<li><p><strong>images</strong> – A list of Pygame Surface objects that make up the animation frames.</p></li>
+<li><p><strong>img_dur</strong> – The duration of each frame in the animation in game frames, defaults to 5.</p></li>
+<li><p><strong>loop</strong> – A boolean that determines whether the animation should loop or play once, defaults to True.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="animation.Animation.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/animation.html#Animation.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#animation.Animation.copy" title="Link to this definition"></a></dt>
-<dd><p>Creates a copy of this Animation instance.</p>
+<dd><p>Creates a copy of this Animation object, allowing for independent animation sequences using the same frames.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A new Animation instance with the same images, duration, and loop setting.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#animation.Animation" title="animation.Animation">Animation</a></p>
+<dd class="field-odd"><p>A new instance of Animation with the same images, duration, and looping behavior.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -128,13 +125,10 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="animation.Animation.img">
 <span class="sig-name descname"><span class="pre">img</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/animation.html#Animation.img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#animation.Animation.img" title="Link to this definition"></a></dt>
-<dd><p>Returns the current image to be displayed based on the current frame.</p>
+<dd><p>Retrieves the current image of the animation based on the current frame index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The image corresponding to the current animation frame.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>pygame.Surface</p>
+<dd class="field-odd"><p>The Pygame Surface object of the current frame.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -142,7 +136,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="animation.Animation.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/animation.html#Animation.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#animation.Animation.update" title="Link to this definition"></a></dt>
-<dd><p>Updates the animation frame count, looping or stopping as necessary.</p>
+<dd><p>Updates the animation frame, advancing it or looping it depending on the configuration.</p>
 </dd></dl>
 
 </dd></dl>
@@ -150,16 +144,13 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="animation.load_image">
 <span class="sig-prename descclassname"><span class="pre">animation.</span></span><span class="sig-name descname"><span class="pre">load_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/animation.html#load_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#animation.load_image" title="Link to this definition"></a></dt>
-<dd><p>Loads an image from a specified path, converts it for optimal display, and sets a color key for transparency.</p>
+<dd><p>Loads an image from the specified path, converts it to have an alpha channel, and sets its color key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The path relative to the base image directory from which to load the image.</p>
+<dd class="field-odd"><p><strong>path</strong> – The path to the image file, relative to the base image directory.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The loaded and processed image.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pygame.Surface</p>
+<dd class="field-even"><p>A Pygame Surface object with the loaded image.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -167,16 +158,13 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="animation.load_images">
 <span class="sig-prename descclassname"><span class="pre">animation.</span></span><span class="sig-name descname"><span class="pre">load_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/animation.html#load_images"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#animation.load_images" title="Link to this definition"></a></dt>
-<dd><p>Loads all images from a specified directory path, sorted by filename.</p>
+<dd><p>Loads all images in a specified directory, sorted alphabetically.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The directory path relative to the base image directory from which to load images.</p>
+<dd class="field-odd"><p><strong>path</strong> – The path to the directory containing image files, relative to the base image directory.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of loaded images.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
+<dd class="field-even"><p>A list of Pygame Surface objects of the loaded images.</p>
 </dd>
 </dl>
 </dd></dl>

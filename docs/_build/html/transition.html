@@ -92,16 +92,17 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="transition.circular_fade">
 <span class="sig-prename descclassname"><span class="pre">transition.</span></span><span class="sig-name descname"><span class="pre">circular_fade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'in'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(255,</span> <span class="pre">255,</span> <span class="pre">255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/transition.html#circular_fade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#transition.circular_fade" title="Link to this definition"></a></dt>
-<dd><p>Performs a circular fade transition on a given Pygame screen. The transition can be configured to fade in, fade out, or both.</p>
+<dd><p>Performs a circular fade effect on a Pygame screen object. The fade can be configured to fade in, fade out,
+or both sequentially. This function is typically used for transition effects between scenes or menus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>screen</strong> (<em>pygame.Surface</em>) – The Pygame screen on which the fade is applied.</p></li>
-<li><p><strong>mode</strong> (<em>str</em>) – The mode of the transition, either ‘in’, ‘out’, or ‘both’. Default is ‘in’.</p></li>
-<li><p><strong>duration</strong> (<em>int</em>) – The duration of the fade effect in milliseconds. Default is 500ms.</p></li>
-<li><p><strong>max_radius</strong> (<em>int</em>) – The maximum radius of the circle used for the fade. If None, it is calculated to cover the screen.</p></li>
-<li><p><strong>border_color</strong> (<em>tuple</em>) – The color of the border of the circle. Default is white (255, 255, 255).</p></li>
-<li><p><strong>border_thickness</strong> (<em>int</em>) – The thickness of the border of the circle. Default is 15 pixels.</p></li>
+<li><p><strong>screen</strong> – The Pygame surface where the fade effect is applied.</p></li>
+<li><p><strong>mode</strong> – A string indicating the fade mode; “in” for fading in, “out” for fading out, “both” for both in sequence.</p></li>
+<li><p><strong>duration</strong> – The duration of the fade effect in milliseconds.</p></li>
+<li><p><strong>max_radius</strong> – The maximum radius of the circle used in the fade effect. If None, it calculates based on screen dimensions.</p></li>
+<li><p><strong>border_color</strong> – The color of the border of the fading circle.</p></li>
+<li><p><strong>border_thickness</strong> – The thickness of the circle’s border during the fade effect.</p></li>
 </ul>
 </dd>
 </dl>

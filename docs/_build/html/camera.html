@@ -98,28 +98,26 @@
 <dt class="sig sig-object py" id="camera.Camera">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">camera.</span></span><span class="sig-name descname"><span class="pre">Camera</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/camera.html#Camera"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#camera.Camera" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class to manage the camera view in a game, focusing on a target within a bounded area.</p>
+<p>A Camera object that handles the viewing area in the game, focusing on a target entity and
+limiting the camera’s movement to the dimensions of the map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>width</strong> (<em>int</em>) – The width of the camera’s view area.</p></li>
-<li><p><strong>height</strong> (<em>int</em>) – The height of the camera’s view area.</p></li>
+<li><p><strong>width</strong> – The width of the area the camera can scroll over.</p></li>
+<li><p><strong>height</strong> – The height of the area the camera can scroll over.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="camera.Camera.apply">
 <span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/camera.html#Camera.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#camera.Camera.apply" title="Link to this definition"></a></dt>
-<dd><p>Applies the camera’s offset to an entity’s position, effectively translating it within the camera’s viewport.</p>
+<dd><p>Adjusts the position of an entity relative to the current camera position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>entity</strong> (<em>pygame.Rect</em>) – The rectangle representing the entity to be adjusted by the camera.</p>
+<dd class="field-odd"><p><strong>entity</strong> – The entity whose position will be adjusted for camera offset.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A new rectangle, which is the entity adjusted to the camera’s current position.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pygame.Rect</p>
+<dd class="field-even"><p>The new position of the entity as adjusted by the camera offset.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -127,10 +125,11 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="camera.Camera.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/camera.html#Camera.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#camera.Camera.update" title="Link to this definition"></a></dt>
-<dd><p>Updates the camera’s position based on a target entity, ensuring the target is centered on the screen within the boundaries.</p>
+<dd><p>Updates the camera’s position based on the target entity, ensuring the target remains
+centered in the view, and constraining the camera to the predefined boundaries of the map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>target</strong> – The target entity, which should have ‘x’ and ‘y’ attributes that the camera centers on.</p>
+<dd class="field-odd"><p><strong>target</strong> – The entity the camera should focus on and center in the view.</p>
 </dd>
 </dl>
 </dd></dl>

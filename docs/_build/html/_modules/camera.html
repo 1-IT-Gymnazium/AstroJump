@@ -79,10 +79,11 @@
 <a class="viewcode-back" href="../camera.html#camera.Camera">[docs]</a>
 <span class="k">class</span> <span class="nc">Camera</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A class to manage the camera view in a game, focusing on a target within a bounded area.</span>
+<span class="sd">    A Camera object that handles the viewing area in the game, focusing on a target entity and</span>
+<span class="sd">    limiting the camera&#39;s movement to the dimensions of the map.</span>
 
-<span class="sd">    :param int width: The width of the camera&#39;s view area.</span>
-<span class="sd">    :param int height: The height of the camera&#39;s view area.</span>
+<span class="sd">    :param width: The width of the area the camera can scroll over.</span>
+<span class="sd">    :param height: The height of the area the camera can scroll over.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
@@ -94,11 +95,10 @@
 <a class="viewcode-back" href="../camera.html#camera.Camera.apply">[docs]</a>
     <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Applies the camera&#39;s offset to an entity&#39;s position, effectively translating it within the camera&#39;s viewport.</span>
+<span class="sd">        Adjusts the position of an entity relative to the current camera position.</span>
 
-<span class="sd">        :param pygame.Rect entity: The rectangle representing the entity to be adjusted by the camera.</span>
-<span class="sd">        :return: A new rectangle, which is the entity adjusted to the camera&#39;s current position.</span>
-<span class="sd">        :rtype: pygame.Rect</span>
+<span class="sd">        :param entity: The entity whose position will be adjusted for camera offset.</span>
+<span class="sd">        :return: The new position of the entity as adjusted by the camera offset.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">entity</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">topleft</span><span class="p">)</span></div>
 
@@ -107,9 +107,10 @@
 <a class="viewcode-back" href="../camera.html#camera.Camera.update">[docs]</a>
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Updates the camera&#39;s position based on a target entity, ensuring the target is centered on the screen within the boundaries.</span>
+<span class="sd">        Updates the camera&#39;s position based on the target entity, ensuring the target remains</span>
+<span class="sd">        centered in the view, and constraining the camera to the predefined boundaries of the map.</span>
 
-<span class="sd">        :param target: The target entity, which should have &#39;x&#39; and &#39;y&#39; attributes that the camera centers on.</span>
+<span class="sd">        :param target: The entity the camera should focus on and center in the view.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">target</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">WINDOW_WIDTH</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">target</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">WINDOW_HEIGHT</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>

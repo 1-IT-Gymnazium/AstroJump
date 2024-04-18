@@ -219,8 +219,10 @@ class Game:
             if level3.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
                     self.button_sound.play()
-                    print("Level 3 Selected")
-                    return 3
+                    circular_fade(self.screen, 'out')
+                    pygame.mixer.music.load(self.bg_level_music)
+                    pygame.mixer.music.play(-1)
+                    self.show_map("levels/level3.csv")
 
             if return_button.collidepoint((mx, my)):
                 if pygame.mouse.get_pressed()[0]:
@@ -251,14 +253,12 @@ class Game:
             mx, my = pygame.mouse.get_pos()
 
             return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 900, BUTTON_WIDTH, BUTTON_HEIGHT)
-            page1 = pygame.Rect(250, 300, 500, 400)
-            page2 = pygame.Rect(1170, 300, 500, 400)
+            page1 = pygame.Rect((WINDOW_WIDTH // 2) - 250, 300, 500, 400)
 
             return_hovered = return_button.collidepoint((mx, my))
 
             self.draw_button("Return", return_button, self.hover_color if return_hovered else self.button_color)
             pygame.draw.rect(self.screen, self.button_color, page1, border_radius=30)
-            pygame.draw.rect(self.screen, self.button_color, page2, border_radius=30)
 
             self.draw_text("Tutorial", self.font_custom, self.white, WINDOW_WIDTH // 2, 175)
             self.draw_text("Return", self.font_custom, self.white, return_button.centerx, return_button.centery)

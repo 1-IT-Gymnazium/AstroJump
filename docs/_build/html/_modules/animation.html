@@ -81,11 +81,10 @@
 <a class="viewcode-back" href="../animation.html#animation.load_image">[docs]</a>
 <span class="k">def</span> <span class="nf">load_image</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Loads an image from a specified path, converts it for optimal display, and sets a color key for transparency.</span>
+<span class="sd">    Loads an image from the specified path, converts it to have an alpha channel, and sets its color key.</span>
 
-<span class="sd">    :param str path: The path relative to the base image directory from which to load the image.</span>
-<span class="sd">    :return: The loaded and processed image.</span>
-<span class="sd">    :rtype: pygame.Surface</span>
+<span class="sd">    :param path: The path to the image file, relative to the base image directory.</span>
+<span class="sd">    :return: A Pygame Surface object with the loaded image.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">base_img_path</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">convert_alpha</span><span class="p">()</span>
     <span class="n">img</span><span class="o">.</span><span class="n">set_colorkey</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
@@ -97,11 +96,10 @@
 <a class="viewcode-back" href="../animation.html#animation.load_images">[docs]</a>
 <span class="k">def</span> <span class="nf">load_images</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Loads all images from a specified directory path, sorted by filename.</span>
+<span class="sd">    Loads all images in a specified directory, sorted alphabetically.</span>
 
-<span class="sd">    :param str path: The directory path relative to the base image directory from which to load images.</span>
-<span class="sd">    :return: A list of loaded images.</span>
-<span class="sd">    :rtype: list</span>
+<span class="sd">    :param path: The path to the directory containing image files, relative to the base image directory.</span>
+<span class="sd">    :return: A list of Pygame Surface objects of the loaded images.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">img_name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">base_img_path</span> <span class="o">+</span> <span class="n">path</span><span class="p">)):</span>
@@ -114,28 +112,27 @@
 <a class="viewcode-back" href="../animation.html#animation.Animation">[docs]</a>
 <span class="k">class</span> <span class="nc">Animation</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A class to manage animations by cycling through a list of images based on a specified duration and looping behavior.</span>
+<span class="sd">    Manages an animation sequence from a list of images, with control over the frame duration and looping behavior.</span>
 
-<span class="sd">    :param list images: A list of pygame.Surface objects representing the animation frames.</span>
-<span class="sd">    :param int img_dur: The duration each image should be displayed, in game frames.</span>
-<span class="sd">    :param bool loop: Whether the animation should loop back to the start upon reaching the end.</span>
+<span class="sd">    :param images: A list of Pygame Surface objects that make up the animation frames.</span>
+<span class="sd">    :param img_dur: The duration of each frame in the animation in game frames, defaults to 5.</span>
+<span class="sd">    :param loop: A boolean that determines whether the animation should loop or play once, defaults to True.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">img_dur</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="n">images</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">img_duration</span> <span class="o">=</span> <span class="n">img_dur</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="n">loop</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Game frame counter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Indicates whether the animation is finished (useful for non-looping animations)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># The current frame index</span>
 
 <div class="viewcode-block" id="Animation.copy">
 <a class="viewcode-back" href="../animation.html#animation.Animation.copy">[docs]</a>
     <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates a copy of this Animation instance.</span>
+<span class="sd">        Creates a copy of this Animation object, allowing for independent animation sequences using the same frames.</span>
 
-<span class="sd">        :return: A new Animation instance with the same images, duration, and loop setting.</span>
-<span class="sd">        :rtype: Animation</span>
+<span class="sd">        :return: A new instance of Animation with the same images, duration, and looping behavior.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Animation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_duration</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span></div>
 
@@ -144,7 +141,7 @@
 <a class="viewcode-back" href="../animation.html#animation.Animation.update">[docs]</a>
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Updates the animation frame count, looping or stopping as necessary.</span>
+<span class="sd">        Updates the animation frame, advancing it or looping it depending on the configuration.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img_duration</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">))</span>
@@ -158,10 +155,9 @@
 <a class="viewcode-back" href="../animation.html#animation.Animation.img">[docs]</a>
     <span class="k">def</span> <span class="nf">img</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the current image to be displayed based on the current frame.</span>
+<span class="sd">        Retrieves the current image of the animation based on the current frame index.</span>
 
-<span class="sd">        :return: The image corresponding to the current animation frame.</span>
-<span class="sd">        :rtype: pygame.Surface</span>
+<span class="sd">        :return: The Pygame Surface object of the current frame.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_duration</span><span class="p">)]</span></div>
 </div>

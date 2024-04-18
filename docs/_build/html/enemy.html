@@ -104,26 +104,26 @@
 <dt class="sig sig-object py" id="enemy.Projectile">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">enemy.</span></span><span class="sig-name descname"><span class="pre">Projectile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/enemy.html#Projectile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#enemy.Projectile" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class to manage the behavior and rendering of projectiles within the game.</p>
+<p>Represents a projectile object in the game which can be fired and moved in a specified direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>int</em>) – The initial x-coordinate of the projectile.</p></li>
-<li><p><strong>y</strong> (<em>int</em>) – The initial y-coordinate of the projectile.</p></li>
-<li><p><strong>direction</strong> (<em>str</em>) – The direction of the projectile’s movement (‘right’ or ‘left’).</p></li>
-<li><p><strong>speed</strong> (<em>int</em>) – The speed of the projectile, default is 10.</p></li>
+<li><p><strong>x</strong> – Initial x-coordinate of the projectile.</p></li>
+<li><p><strong>y</strong> – Initial y-coordinate of the projectile.</p></li>
+<li><p><strong>direction</strong> – Direction for the projectile to move (‘left’ or ‘right’).</p></li>
+<li><p><strong>speed</strong> – Movement speed of the projectile, defaults to 10.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="enemy.Projectile.draw">
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">camera</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/enemy.html#Projectile.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#enemy.Projectile.draw" title="Link to this definition"></a></dt>
-<dd><p>Draws the projectile on the game screen, adjusted by the camera’s position.</p>
+<dd><p>Draws the projectile on the screen at its current position adjusted by the camera’s top left position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>screen</strong> (<em>Surface</em>) – The Pygame surface where the projectile will be drawn.</p></li>
-<li><p><strong>camera</strong> (<a class="reference internal" href="camera.html#camera.Camera" title="camera.Camera"><em>Camera</em></a>) – The camera instance to adjust the projectile’s screen position.</p></li>
+<li><p><strong>screen</strong> – Pygame surface where the projectile is to be drawn.</p></li>
+<li><p><strong>camera</strong> – Camera object that handles viewport and projection transformations.</p></li>
 </ul>
 </dd>
 </dl>
@@ -132,7 +132,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="enemy.Projectile.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/enemy.html#Projectile.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#enemy.Projectile.update" title="Link to this definition"></a></dt>
-<dd><p>Updates the position of the projectile based on its direction and speed.</p>
+<dd><p>Updates the position of the projectile based on its speed and direction.</p>
 </dd></dl>
 
 </dd></dl>
@@ -141,21 +141,21 @@
 <dt class="sig sig-object py" id="enemy.ProjectileManager">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">enemy.</span></span><span class="sig-name descname"><span class="pre">ProjectileManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">game</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/enemy.html#ProjectileManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#enemy.ProjectileManager" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A manager class for handling multiple projectiles, their update cycles, and their rendering.</p>
+<p>Manages multiple projectiles, their creation, and updating within a game.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>game</strong> (<a class="reference internal" href="game.html#game.Game" title="game.Game"><em>Game</em></a>) – A reference to the main game instance for accessing game-specific methods and attributes.</p>
+<dd class="field-odd"><p><strong>game</strong> – Reference to the main game object which holds game-wide information and states.</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="enemy.ProjectileManager.draw_projectiles">
 <span class="sig-name descname"><span class="pre">draw_projectiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">camera</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/enemy.html#ProjectileManager.draw_projectiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#enemy.ProjectileManager.draw_projectiles" title="Link to this definition"></a></dt>
-<dd><p>Draws all projectiles managed by this manager on the screen.</p>
+<dd><p>Draws all managed projectiles on the screen.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>screen</strong> (<em>Surface</em>) – The Pygame surface where the projectiles will be drawn.</p></li>
-<li><p><strong>camera</strong> (<a class="reference internal" href="camera.html#camera.Camera" title="camera.Camera"><em>Camera</em></a>) – The camera instance to adjust the projectiles’ screen position.</p></li>
+<li><p><strong>screen</strong> – Pygame surface where projectiles are to be drawn.</p></li>
+<li><p><strong>camera</strong> – Camera object to adjust the projectile’s drawing position based on the camera’s view.</p></li>
 </ul>
 </dd>
 </dl>
@@ -164,16 +164,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="enemy.ProjectileManager.spawn_projectile">
 <span class="sig-name descname"><span class="pre">spawn_projectile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/enemy.html#ProjectileManager.spawn_projectile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#enemy.ProjectileManager.spawn_projectile" title="Link to this definition"></a></dt>
-<dd><p>Spawns a new projectile at each cannon position found in the current game level.</p>
+<dd><p>Spawns new projectiles based on the positions of cannons in the game.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="enemy.ProjectileManager.update_projectiles">
 <span class="sig-name descname"><span class="pre">update_projectiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/enemy.html#ProjectileManager.update_projectiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#enemy.ProjectileManager.update_projectiles" title="Link to this definition"></a></dt>
-<dd><p>Updates the state of all managed projectiles and checks if it’s time to spawn new projectiles.</p>
+<dd><p>Updates all managed projectiles and handles the timing for spawning new projectiles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>current_time</strong> (<em>float</em>) – The current time to manage spawning new projectiles based on intervals.</p>
+<dd class="field-odd"><p><strong>current_time</strong> – Current game time to control projectile spawn timing.</p>
 </dd>
 </dl>
 </dd></dl>

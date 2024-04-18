@@ -103,28 +103,26 @@
 <dt class="sig sig-object py" id="player.Player">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">player.</span></span><span class="sig-name descname"><span class="pre">Player</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">screen</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/player.html#Player"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#player.Player" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class to represent a player character in a game, handling its movement, animations, and interactions.</p>
+<p>Represents a player character in a game with capabilities such as movement,
+jumping, and animation handling based on the state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>int</em>) – Initial x-coordinate of the player.</p></li>
-<li><p><strong>y</strong> (<em>int</em>) – Initial y-coordinate of the player.</p></li>
-<li><p><strong>width</strong> (<em>int</em>) – Width of the player.</p></li>
-<li><p><strong>height</strong> (<em>int</em>) – Height of the player.</p></li>
-<li><p><strong>screen</strong> (<em>Surface</em>) – The pygame screen where the player will be drawn.</p></li>
+<li><p><strong>x</strong> – Initial x-coordinate of the player.</p></li>
+<li><p><strong>y</strong> – Initial y-coordinate of the player.</p></li>
+<li><p><strong>width</strong> – Width of the player.</p></li>
+<li><p><strong>height</strong> – Height of the player.</p></li>
+<li><p><strong>screen</strong> – Pygame screen where the player is to be drawn.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="player.Player.calculate_new_position">
 <span class="sig-name descname"><span class="pre">calculate_new_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/player.html#Player.calculate_new_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#player.Player.calculate_new_position" title="Link to this definition"></a></dt>
-<dd><p>Calculates the new position of the player based on current velocity and movement flags.</p>
+<dd><p>Calculates the new position of the player based on current movement and gravity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A tuple of new x and y coordinates.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple</p>
+<dd class="field-odd"><p>Tuple (new_x, new_y) representing the new position coordinates.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -132,10 +130,10 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="player.Player.draw">
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">camera</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/player.html#Player.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#player.Player.draw" title="Link to this definition"></a></dt>
-<dd><p>Draws the player on the screen based on the current animation frame and orientation.</p>
+<dd><p>Draws the player on the screen based on the current animation frame and camera view.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>camera</strong> (<a class="reference internal" href="camera.html#camera.Camera" title="camera.Camera"><em>Camera</em></a>) – The camera instance to adjust the player’s screen position.</p>
+<dd class="field-odd"><p><strong>camera</strong> – Camera object that handles viewport and projection transformations.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -143,10 +141,10 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="player.Player.handle_event">
 <span class="sig-name descname"><span class="pre">handle_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/player.html#Player.handle_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#player.Player.handle_event" title="Link to this definition"></a></dt>
-<dd><p>Handles key events for player movement and actions like jumping.</p>
+<dd><p>Handles player input events to update movement and jumping status.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>event</strong> (<em>Event</em>) – The pygame event to process.</p>
+<dd class="field-odd"><p><strong>event</strong> – Pygame event to be processed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -154,13 +152,10 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="player.Player.is_moving">
 <span class="sig-name descname"><span class="pre">is_moving</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/player.html#Player.is_moving"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#player.Player.is_moving" title="Link to this definition"></a></dt>
-<dd><p>Determines if the player is currently moving or jumping.</p>
+<dd><p>Checks if the player is currently moving or jumping.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if the player is moving or jumping, False otherwise.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -174,18 +169,18 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="player.Player.update_animation">
 <span class="sig-name descname"><span class="pre">update_animation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/player.html#Player.update_animation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#player.Player.update_animation" title="Link to this definition"></a></dt>
-<dd><p>Updates the player’s current animation based on movement and state.</p>
+<dd><p>Updates the player’s animation state based on the movement and jumping flags.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="player.Player.update_position">
 <span class="sig-name descname"><span class="pre">update_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/player.html#Player.update_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#player.Player.update_position" title="Link to this definition"></a></dt>
-<dd><p>Updates the player’s position if not recently reset.</p>
+<dd><p>Updates the player’s position on the screen.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>new_x</strong> (<em>int</em>) – The new x-coordinate for the player.</p></li>
-<li><p><strong>new_y</strong> (<em>int</em>) – The new y-coordinate for the player.</p></li>
+<li><p><strong>new_x</strong> – New x-coordinate.</p></li>
+<li><p><strong>new_y</strong> – New y-coordinate.</p></li>
 </ul>
 </dd>
 </dl>

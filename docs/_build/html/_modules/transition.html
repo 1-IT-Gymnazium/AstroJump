@@ -78,14 +78,15 @@
 <a class="viewcode-back" href="../transition.html#transition.circular_fade">[docs]</a>
 <span class="k">def</span> <span class="nf">circular_fade</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">max_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">border_color</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="n">border_thickness</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Performs a circular fade transition on a given Pygame screen. The transition can be configured to fade in, fade out, or both.</span>
+<span class="sd">    Performs a circular fade effect on a Pygame screen object. The fade can be configured to fade in, fade out,</span>
+<span class="sd">    or both sequentially. This function is typically used for transition effects between scenes or menus.</span>
 
-<span class="sd">    :param pygame.Surface screen: The Pygame screen on which the fade is applied.</span>
-<span class="sd">    :param str mode: The mode of the transition, either &#39;in&#39;, &#39;out&#39;, or &#39;both&#39;. Default is &#39;in&#39;.</span>
-<span class="sd">    :param int duration: The duration of the fade effect in milliseconds. Default is 500ms.</span>
-<span class="sd">    :param int max_radius: The maximum radius of the circle used for the fade. If None, it is calculated to cover the screen.</span>
-<span class="sd">    :param tuple border_color: The color of the border of the circle. Default is white (255, 255, 255).</span>
-<span class="sd">    :param int border_thickness: The thickness of the border of the circle. Default is 15 pixels.</span>
+<span class="sd">    :param screen: The Pygame surface where the fade effect is applied.</span>
+<span class="sd">    :param mode: A string indicating the fade mode; &quot;in&quot; for fading in, &quot;out&quot; for fading out, &quot;both&quot; for both in sequence.</span>
+<span class="sd">    :param duration: The duration of the fade effect in milliseconds.</span>
+<span class="sd">    :param max_radius: The maximum radius of the circle used in the fade effect. If None, it calculates based on screen dimensions.</span>
+<span class="sd">    :param border_color: The color of the border of the fading circle.</span>
+<span class="sd">    :param border_thickness: The thickness of the circle&#39;s border during the fade effect.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">max_radius</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">max_radius</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
@@ -101,31 +102,32 @@
             <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
             <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">max_radius</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">max_radius</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
-    <span class="n">start_time</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;in&quot;</span> <span class="ow">or</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">max_radius</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">max_radius</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span>
 
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">elapsed</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="n">progress</span> <span class="o">=</span> <span class="n">elapsed</span> <span class="o">/</span> <span class="n">duration</span>
-        <span class="k">if</span> <span class="n">progress</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">break</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">elapsed</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+            <span class="n">progress</span> <span class="o">=</span> <span class="n">elapsed</span> <span class="o">/</span> <span class="n">duration</span>
+            <span class="k">if</span> <span class="n">progress</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">break</span>
 
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;out&quot;</span><span class="p">:</span>
-            <span class="n">radius</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_radius</span> <span class="o">*</span> <span class="n">progress</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Fade in</span>
-            <span class="n">radius</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_radius</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">progress</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;out&quot;</span><span class="p">:</span>
+                <span class="n">radius</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_radius</span> <span class="o">*</span> <span class="n">progress</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Fade in</span>
+                <span class="n">radius</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_radius</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">progress</span><span class="p">))</span>
 
-        <span class="n">fade_surface</span> <span class="o">=</span> <span class="n">screen</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">alpha</span> <span class="o">=</span> <span class="mi">255</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">progress</span><span class="p">)</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;out&quot;</span> <span class="k">else</span> <span class="mi">255</span> <span class="o">*</span> <span class="n">progress</span>
-        <span class="n">fade_surface</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="n">fade_surface</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+            <span class="n">fade_surface</span> <span class="o">=</span> <span class="n">screen</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="mi">255</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">progress</span><span class="p">)</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;out&quot;</span> <span class="k">else</span> <span class="mi">255</span> <span class="o">*</span> <span class="n">progress</span>
+            <span class="n">fade_surface</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">fade_surface</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
 
-        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">fade_surface</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span> <span class="n">radius</span><span class="p">)</span>
-        <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">fade_surface</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span></div>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">fade_surface</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span> <span class="n">radius</span><span class="p">)</span>
+            <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">fade_surface</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+            <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span></div>
 
 </pre></div>
 
