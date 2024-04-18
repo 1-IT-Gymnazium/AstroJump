@@ -473,6 +473,58 @@ class Game:
                         cannons.append((col_index, row_index))
         return cannons
 
+    def show_win_menu(self):
+        """
+        Displays the win menu after a game victory. This menu provides options to return to the main menu or quit the game.
+
+        The method continuously checks for mouse position and button clicks to respond to user interactions:
+        - Displays a "YOU WON!!!" message and two buttons: "Menu" and "Quit".
+        - If the "Menu" button is clicked, it resets the player's position, plays a button sound, starts background music, applies a fade-out effect, and returns to the main menu.
+        - If the "Quit" button is clicked, it quits the application.
+        - The user can also press the ESC key to exit the win menu.
+
+        This loop runs indefinitely until an exit condition is triggered (either button click or quitting the event).
+        """
+        while True:
+            mx, my = pygame.mouse.get_pos()
+
+            main_menu_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH, BUTTON_HEIGHT)
+            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 700, BUTTON_WIDTH, BUTTON_HEIGHT)
+
+            quit_hovered = quit_button.collidepoint((mx, my))
+            main_menu_hovered = main_menu_button.collidepoint((mx, my))
+
+            tutorial_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
+            self.screen.blit(tutorial_bg, (0, 0))
+            self.draw_text("YOU WON!!!", self.font_custom, self.white, WINDOW_WIDTH // 2, 250)
+            self.draw_button("Quit", quit_button, self.quit_button_hover_color if quit_hovered else self.quit_button_color)
+            self.draw_button("Menu", main_menu_button, self.hover_color if main_menu_hovered else self.button_color)
+
+            if main_menu_button.collidepoint((mx, my)):
+                if pygame.mouse.get_pressed()[0]:
+                    self.player.reset_position()
+                    self.button_sound.play()
+                    pygame.mixer.music.load(self.bg_music)
+                    pygame.mixer.music.play(-1)
+                    circular_fade(self.screen, "out")
+                    self.main_menu()
+
+            if quit_button.collidepoint((mx, my)):
+                if pygame.mouse.get_pressed()[0]:
+                    pygame.quit()
+                    sys.exit()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        return
+
+            pygame.display.update()
+
     def show_map(self, map_filename=None):
 
         """
@@ -516,6 +568,9 @@ class Game:
                 self.transition_next_level(next_level_filename)
                 return
 
+            if self.player.x > 4864 and self.current_level == "levels/level3.csv":
+                self.show_win_menu()
+
             # Apply gravity
             new_x, new_y = self.apply_gravity()
 
@@ -554,7 +609,6 @@ class Game:
                     if tile_id == 15:
                         y_offset = TILE_HEIGHT - SPIKE_HEIGHT
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + y_offset, SPIKE_WIDTH, SPIKE_HEIGHT)
-                    # todo:change this according to portal size logic
                     elif tile_id == 16:
                         y_offset = TILE_HEIGHT - CANNON_HEIGHT
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH, row_index * TILE_HEIGHT + y_offset, CANNON_WIDTH, CANNON_HEIGHT)
@@ -646,7 +700,6 @@ class Game:
             if self.player.rect.colliderect(projectile.rect):
                 self.hit_sound.play()
                 self.player.reset_position()
-                print("kulka trefila")
 
     def apply_gravity(self):
         """
