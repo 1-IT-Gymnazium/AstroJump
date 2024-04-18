@@ -79,6 +79,7 @@
 <li class="toctree-l2"><a class="reference internal" href="settings.html">settings module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="slider.html">slider module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="transition.html">transition module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particle.html">particle module</a></li>
 </ul>
 </li>
 </ul>
@@ -311,7 +312,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="game.Game.transition_next_level">
 <span class="sig-name descname"><span class="pre">transition_next_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">next_level_filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.transition_next_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.transition_next_level" title="Link to this definition"></a></dt>
-<dd><p>Manages the transition to the next level, including loading the new level map.</p>
+<dd><p>Manages the transition to the next level, including loading the new level map.
+Clears existing projectiles before transitioning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>next_level_filename</strong> (<em>str</em>) – The filename of the next level to load.</p>

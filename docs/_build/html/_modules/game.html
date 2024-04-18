@@ -83,6 +83,7 @@
 <span class="kn">from</span> <span class="nn">slider</span> <span class="kn">import</span> <span class="n">Slider</span>
 <span class="kn">from</span> <span class="nn">transition</span> <span class="kn">import</span> <span class="n">circular_fade</span>
 <span class="kn">from</span> <span class="nn">enemy</span> <span class="kn">import</span> <span class="n">ProjectileManager</span>
+<span class="kn">from</span> <span class="nn">particle</span> <span class="kn">import</span> <span class="n">ParticleSystem</span>
 
 
 <div class="viewcode-block" id="Game">
@@ -120,6 +121,8 @@
 
         <span class="c1"># camera</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">camera</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">(</span><span class="n">MAP_WIDTH</span><span class="p">,</span> <span class="n">MAP_HEIGHT</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span> <span class="o">=</span> <span class="n">ParticleSystem</span><span class="p">()</span>
 
         <span class="c1"># sliders</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sfx_slider</span> <span class="o">=</span> <span class="n">Slider</span><span class="p">(</span><span class="mi">810</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
@@ -597,9 +600,11 @@
     <span class="k">def</span> <span class="nf">transition_next_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">next_level_filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Manages the transition to the next level, including loading the new level map.</span>
+<span class="sd">        Clears existing projectiles before transitioning.</span>
 
 <span class="sd">        :param str next_level_filename: The filename of the next level to load.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projectile_manager</span><span class="o">.</span><span class="n">clear_projectiles</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">reset_position</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_level</span> <span class="o">=</span> <span class="n">next_level_filename</span>
         <span class="n">circular_fade</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">)</span>
@@ -754,6 +759,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">draw_map</span><span class="p">(</span><span class="n">game_map</span><span class="p">,</span> <span class="n">non_coll_tiles</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_paused</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">projectile_manager</span><span class="o">.</span><span class="n">draw_projectiles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
                                                          <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="p">)</span>
@@ -841,6 +848,9 @@
 
                     <span class="k">if</span> <span class="n">player_rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="n">tile_rect</span><span class="p">):</span>
                         <span class="k">if</span> <span class="n">tile_id</span> <span class="o">==</span> <span class="mi">15</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span>
+                                                      <span class="n">lifespan</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">position_was_reset</span> <span class="o">=</span> <span class="kc">True</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">reset_position</span><span class="p">()</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="p">)</span>
@@ -894,6 +904,9 @@
 
                     <span class="k">if</span> <span class="n">player_rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="n">tile_rect</span><span class="p">):</span>
                         <span class="k">if</span> <span class="n">tile_id</span> <span class="o">==</span> <span class="mi">15</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span>
+                                                      <span class="n">lifespan</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">position_was_reset</span> <span class="o">=</span> <span class="kc">True</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">reset_position</span><span class="p">()</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="p">)</span>
@@ -917,6 +930,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">projectile</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">projectile_manager</span><span class="o">.</span><span class="n">projectiles</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="n">projectile</span><span class="o">.</span><span class="n">rect</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span>
+                                          <span class="n">lifespan</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">hit_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">reset_position</span><span class="p">()</span></div>
 

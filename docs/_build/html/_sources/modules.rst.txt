@@ -13,3 +13,4 @@ src
    settings
    slider
    transition
+   particle
