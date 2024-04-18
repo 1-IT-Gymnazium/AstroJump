@@ -12,7 +12,6 @@ def load_image(path):
     :return: A Pygame Surface object with the loaded image.
     """
     img = pygame.image.load(base_img_path + path).convert_alpha()
-    img.set_colorkey((0, 0, 0))
     return img
 
 
