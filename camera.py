@@ -1,7 +1,6 @@
 import pygame
 from settings import WINDOW_WIDTH, WINDOW_HEIGHT
 
-
 class Camera:
     """
     A Camera object that handles the viewing area in the game, focusing on a target entity and
@@ -10,7 +9,6 @@ class Camera:
     :param width: The width of the area the camera can scroll over.
     :param height: The height of the area the camera can scroll over.
     """
-
     def __init__(self, width, height):
         self.camera = pygame.Rect(0, 0, width, height)
         self.width = width
@@ -39,6 +37,5 @@ class Camera:
         x = min(0, x)  # Left
         y = min(0, y)  # Top
         x = max(-(self.width - WINDOW_WIDTH), x)  # Right
-        y = max(-(self.height - WINDOW_HEIGHT), y)  # Bottom
 
         self.camera = pygame.Rect(x, y, self.width, self.height)
