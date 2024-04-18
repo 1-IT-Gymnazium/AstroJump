@@ -10,6 +10,7 @@ from camera import Camera
 from slider import Slider
 from transition import circular_fade
 from enemy import ProjectileManager
+from particle import ParticleSystem
 
 
 class Game:
@@ -45,6 +46,8 @@ class Game:
 
         # camera
         self.camera = Camera(MAP_WIDTH, MAP_HEIGHT)
+
+        self.particle_system = ParticleSystem()
 
         # sliders
         self.sfx_slider = Slider(810, 400, 300, 40, 0, 1, 0.5)
@@ -646,6 +649,8 @@ class Game:
             self.draw_map(game_map, non_coll_tiles)
             self.player.draw(self.camera)
             self.camera.update(self.player)
+            self.particle_system.update()
+            self.particle_system.draw(self.screen)
             if self.game_paused is False:
                 self.projectile_manager.draw_projectiles(self.screen,
                                                          self.camera)
@@ -727,6 +732,9 @@ class Game:
 
                     if player_rect.colliderect(tile_rect):
                         if tile_id == 15:
+                            self.particle_system.emit(self.player.x,
+                                                      self.player.y, 50,
+                                                      lifespan=50)
                             self.player.position_was_reset = True
                             self.player.reset_position()
                             self.camera.update(self.player)
@@ -777,6 +785,9 @@ class Game:
 
                     if player_rect.colliderect(tile_rect):
                         if tile_id == 15:
+                            self.particle_system.emit(self.player.x,
+                                                      self.player.y, 50,
+                                                      lifespan=50)
                             self.player.position_was_reset = True
                             self.player.reset_position()
                             self.camera.update(self.player)
@@ -797,6 +808,9 @@ class Game:
         """
         for projectile in self.projectile_manager.projectiles:
             if self.player.rect.colliderect(projectile.rect):
+                self.particle_system.emit(self.player.x,
+                                          self.player.y, 50,
+                                          lifespan=50)
                 self.hit_sound.play()
                 self.player.reset_position()
 
