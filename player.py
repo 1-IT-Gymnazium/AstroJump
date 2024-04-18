@@ -14,6 +14,7 @@ class Player:
     :param height: Height of the player.
     :param screen: Pygame screen where the player is to be drawn.
     """
+
     def __init__(self, x, y, width, height, screen):
         self.initial_x = x
         self.initial_y = y
@@ -44,7 +45,8 @@ class Player:
 
     def update_animation(self):
         """
-        Updates the player's animation state based on the movement and jumping flags.
+        Updates the player's animation state based on the movement and jumping
+        flags.
         """
         if self.is_jumping:
             self.current_animation = "player_jump"
@@ -55,9 +57,11 @@ class Player:
 
     def draw(self, camera):
         """
-        Draws the player on the screen based on the current animation frame and camera view.
+        Draws the player on the screen based on the current animation frame and
+        camera view.
 
-        :param camera: Camera object that handles viewport and projection transformations.
+        :param camera: Camera object that handles viewport and projection
+        transformations.
         """
         current_animation = self.assets[self.current_animation]
         current_animation.update()
@@ -104,9 +108,11 @@ class Player:
 
     def calculate_new_position(self):
         """
-        Calculates the new position of the player based on current movement and gravity.
+        Calculates the new position of the player based on current movement
+        and gravity.
 
-        :return: Tuple (new_x, new_y) representing the new position coordinates.
+        :return: Tuple (new_x, new_y) representing the new position
+        coordinates.
         """
         new_x = self.x
         new_y = self.y
