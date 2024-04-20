@@ -1,9 +1,5 @@
 import pygame
 import sys
-from settings import (WINDOW_WIDTH, WINDOW_HEIGHT, MAP_WIDTH, MAP_HEIGHT,
-                      BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_GAP, TILE_HEIGHT,
-                      TILE_WIDTH, SPIKE_HEIGHT, SPIKE_WIDTH, CANNON_HEIGHT,
-                      CANNON_WIDTH)
 import csv
 from player import Player
 from camera import Camera
@@ -11,6 +7,10 @@ from slider import Slider
 from transition import circular_fade
 from enemy import ProjectileManager
 from particle import ParticleSystem
+from settings import (WINDOW_WIDTH, WINDOW_HEIGHT, MAP_WIDTH, MAP_HEIGHT,
+                      BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_GAP, TILE_HEIGHT,
+                      TILE_WIDTH, SPIKE_HEIGHT, SPIKE_WIDTH, CANNON_HEIGHT,
+                      CANNON_WIDTH)
 
 
 class Game:
@@ -24,7 +24,6 @@ class Game:
         """
         Initializes the game environment, setting up the screen, loading resources, and initializing game components.
         """
-
         pygame.init()
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("AstroJump")
@@ -62,9 +61,12 @@ class Game:
         self.bg_music = "Sounds/BG_music.mp3"
         self.bg_level_music = "Sounds/level_bg_music1.mp3"
         self.hit_sound = pygame.mixer.Sound("Sounds/hit_sound.mp3")
-        pygame.mixer.music.load(self.bg_music)
-        pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.1)
+        try:
+            pygame.mixer.music.load(self.bg_music)
+            pygame.mixer.music.play(-1)
+            pygame.mixer.music.set_volume(0.1)
+        except Exception as e:
+            print(f"Error while trying to load background music: {e}")
 
         self.current_level = None
 
@@ -130,8 +132,8 @@ class Game:
                     pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 500,
                                 BUTTON_WIDTH, BUTTON_HEIGHT))
                 settings_button = (
-                    pygame.Rect( WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600,
-                                 BUTTON_WIDTH, BUTTON_HEIGHT))
+                    pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600,
+                                BUTTON_WIDTH, BUTTON_HEIGHT))
                 quit_button = (
                     pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
                                 700, BUTTON_WIDTH, BUTTON_HEIGHT))
@@ -276,7 +278,6 @@ class Game:
         """
         Displays the tutorial screen and handles interactions within the tutorial.
         """
-
         try:
             while True:
                 tutorial_bg = pygame.image.load(
@@ -390,7 +391,6 @@ class Game:
         """
         Displays the respawn menu when the player dies and handles the actions based on user interaction.
         """
-
         main_menu_button = pygame.Rect(
             WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2 - 20, 500, 300,
             BUTTON_HEIGHT)
@@ -450,7 +450,6 @@ class Game:
         """
         Displays the in-game menu and handles navigation based on user interaction.
         """
-
         while True:
             mx, my = pygame.mouse.get_pos()
 
@@ -542,7 +541,6 @@ class Game:
         :return: A list of tuples indicating the positions (column, row) of found tiles.
         :rtype: list
         """
-
         file_path = self.current_level
 
         cannons = []
@@ -616,7 +614,6 @@ class Game:
 
         :param str map_filename: Optional filename of the map to load, defaults to None.
         """
-
         self.player.position_was_reset = False
         non_coll_tiles = [0]
         if map_filename is not None:
@@ -694,7 +691,6 @@ class Game:
         :param list game_map: A 2D list representing the map where each value corresponds to a tile ID.
         :param list non_coll_tiles: A list of tile IDs that should not be drawn because they are non-collidable.
         """
-
         for row_index, row in enumerate(game_map):
             for col_index, tile_id in enumerate(row):
                 if tile_id not in non_coll_tiles:
@@ -728,24 +724,21 @@ class Game:
         :return: The new x-coordinate for the player after collision checks.
         :rtype: int
         """
-
         for row_index, row in enumerate(game_map):
             for col_index, tile_id in enumerate(row):
                 if tile_id not in non_coll_tiles:
                     if tile_id == 15:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
-                                                row_index * TILE_HEIGHT + (
-                                                        TILE_HEIGHT
-                                                        - SPIKE_HEIGHT)
-                                                ,
-                                                SPIKE_WIDTH, SPIKE_HEIGHT)
+                        tile_rect = (
+                            pygame.Rect(col_index * TILE_WIDTH,
+                                        row_index * TILE_HEIGHT +
+                                        (TILE_HEIGHT - SPIKE_HEIGHT),
+                                        SPIKE_WIDTH, SPIKE_HEIGHT))
                     elif tile_id == 16:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
-                                                row_index * TILE_HEIGHT + (
-                                                        TILE_HEIGHT
-                                                        - CANNON_HEIGHT)
-                                                ,
-                                                CANNON_WIDTH, CANNON_HEIGHT)
+                        tile_rect = (
+                            pygame.Rect(col_index * TILE_WIDTH,
+                                        row_index * TILE_HEIGHT +
+                                        (TILE_HEIGHT - CANNON_HEIGHT),
+                                        CANNON_WIDTH, CANNON_HEIGHT))
                     else:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH,
                                                 row_index * TILE_HEIGHT,
@@ -781,24 +774,21 @@ class Game:
         :return: The new y-coordinate for the player after collision checks.
         :rtype: int
         """
-
         for row_index, row in enumerate(game_map):
             for col_index, tile_id in enumerate(row):
                 if tile_id not in non_coll_tiles:
                     if tile_id == 15:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
-                                                row_index * TILE_HEIGHT + (
-                                                        TILE_HEIGHT
-                                                        - SPIKE_HEIGHT)
-                                                ,
-                                                SPIKE_WIDTH, SPIKE_HEIGHT)
+                        tile_rect = (
+                            pygame.Rect(col_index * TILE_WIDTH,
+                                        row_index * TILE_HEIGHT +
+                                        (TILE_HEIGHT - SPIKE_HEIGHT),
+                                        SPIKE_WIDTH, SPIKE_HEIGHT))
                     elif tile_id == 16:
-                        tile_rect = pygame.Rect(col_index * TILE_WIDTH,
-                                                row_index * TILE_HEIGHT + (
-                                                        TILE_HEIGHT
-                                                        - CANNON_HEIGHT)
-                                                ,
-                                                CANNON_WIDTH, CANNON_HEIGHT)
+                        tile_rect = (
+                            pygame.Rect(col_index * TILE_WIDTH,
+                                        row_index * TILE_HEIGHT +
+                                        (TILE_HEIGHT - CANNON_HEIGHT),
+                                        CANNON_WIDTH, CANNON_HEIGHT))
                     else:
                         tile_rect = pygame.Rect(col_index * TILE_WIDTH,
                                                 row_index * TILE_HEIGHT,
@@ -846,7 +836,6 @@ class Game:
         :return: A tuple containing the new x and y coordinates of the player.
         :rtype: tuple
         """
-
         if not self.player.is_jumping or self.player.vertical_velocity > 0:
             self.player.vertical_velocity += self.player.gravity
             self.player.is_jumping = True
@@ -859,7 +848,6 @@ class Game:
 
         :param Event event: A pygame event object to be processed.
         """
-
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()

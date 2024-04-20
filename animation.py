@@ -11,8 +11,11 @@ def load_image(path):
     :param path: The path to the image file, relative to the base image directory.
     :return: A Pygame Surface object with the loaded image.
     """
-    img = pygame.image.load(base_img_path + path).convert_alpha()
-    return img
+    try:
+        img = pygame.image.load(base_img_path + path).convert_alpha()
+        return img
+    except Exception as e:
+        print(f"Error while trying to load an image: {e}")
 
 
 def load_images(path):
@@ -22,11 +25,13 @@ def load_images(path):
     :param path: The path to the directory containing image files, relative to the base image directory.
     :return: A list of Pygame Surface objects of the loaded images.
     """
-
-    images = []
-    for img_name in sorted(os.listdir(base_img_path + path)):
-        images.append(load_image(path + "/" + img_name))
-    return images
+    try:
+        images = []
+        for img_name in sorted(os.listdir(base_img_path + path)):
+            images.append(load_image(path + "/" + img_name))
+        return images
+    except Exception as e:
+        print(f"Error while trying to load images: {e}")
 
 
 class Animation:
