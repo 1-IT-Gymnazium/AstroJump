@@ -1,5 +1,5 @@
-src
-===
+code
+=====
 
 .. toctree::
    :maxdepth: 4
@@ -9,8 +9,8 @@ src
    enemy
    game
    main
+   particle
    player
    settings
    slider
    transition
-   particle

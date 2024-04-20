@@ -1,5 +1,5 @@
 particle module
-=================
+===============
 
 .. automodule:: particle
    :members:

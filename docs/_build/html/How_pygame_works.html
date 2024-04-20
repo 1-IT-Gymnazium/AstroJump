@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How Pygame Works — AstroJump Documentation</title>
+  <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+  <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+  <script src="_static/jquery.js?v=5d32c60e"></script>
+  <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+  <script src="_static/documentation_options.js?v=5929fcd5"></script>
+  <script src="_static/doctools.js?v=888ff710"></script>
+  <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+  <script src="_static/js/theme.js"></script>
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="prev" title="Modules Description" href="Modules_Description.html" />
+  <link rel="next" title="Interfaces" href="Interfaces.html" />
+</head>
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          <a href="index.html" class="icon icon-home">AstroJump</a>
+          <div role="search">
+            <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+              <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+            </form>
+          </div>
+        </div>
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+          <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+          <ul>
+            <li class="toctree-l1"><a class="reference internal" href="modules.html">code</a></li>
+            <li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+            <li class="toctree-l1"><a class="reference internal" href="System_Architecture.html">System Architecture</a></li>
+            <li class="toctree-l1"><a class="reference internal" href="Modules_Description.html">Modules description</a></li>
+            <li class="toctree-l1 current"><a class="reference internal" href="How_pygame_works.html">How pygame works</a></li>
+            <li class="toctree-l1"><a class="reference internal" href="Interfaces.html">Interfaces</a></li>
+            <li class="toctree-l1"><a class="reference internal" href="LIST_OF_SOURCES.html">List of used sources</a></li>
+            <li class="toctree-l1"><a class="reference internal" href="Description_of_game_mechanics.html">Description of game mechanics</a></li>
+            <li class="toctree-l1"><a class="reference internal" href="Source_Code.html">Source code</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">AstroJump</a>
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+            <ul class="wy-breadcrumbs">
+              <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+              <li class="breadcrumb-item active">How Pygame Works</li>
+              <li class="wy-breadcrumbs-aside">
+                <a href="_sources/How_pygame_works.rst.txt" rel="nofollow">View page source</a>
+              </li>
+            </ul>
+            <hr/>
+          </div>
+          <div role="main" class="document" itemscope itemtype="http://schema.org/Article">
+            <div itemprop="articleBody">
+              <section id="how-pygame-works">
+                <h1>How Pygame Works<a class="headerlink" href="#how-pygame-works" title="Link to this heading"></a></h1>
+                <p>Pygame is a set of Python modules designed for writing video games. It provides functionalities for creating fully featured games and multimedia programs by allowing the use of sound, graphics, and a range of input/output functionalities.</p>
+                <h2>Core Functionalities</h2>
+                <ul>
+                  <li><strong>Initialization and Setup:</strong> Essential functions like <code>pygame.init()</code> and <code>pygame.display.set_mode()</code> prepare the environment for the game.</li>
+                  <li><strong>Event Handling:</strong> Manages user inputs and game actions using <code>pygame.event.get()</code>.</li>
+                  <li><strong>Graphics and Rendering:</strong> Uses <code>pygame.Surface</code> and <code>pygame.draw</code> module for drawing and rendering game elements.</li>
+                  <li><strong>Sound and Music:</strong> Controlled through <code>pygame.mixer</code> and <code>pygame.mixer.music</code> for audio effects and background music.</li>
+                  <li><strong>Time and Frame Rate Control:</strong> <code>pygame.time.Clock()</code> and <code>Clock.tick()</code> manage the timing and frame rate consistency.</li>
+                </ul>
+                <p>The game loop follows a standard sequence initiating with the processing of inputs, updating game logic, and then rendering the output to the display. This loop runs at a target frame rate to maintain smooth gameplay.</p>
+                <h2>Example of a Pygame Loop</h2>
+                <ul>
+                  <li><code>pygame.init()</code>: Initializes all the Pygame modules.</li>
+                  <li><code>pygame.display.set_mode()</code>: Sets up the window where the game will be displayed.</li>
+                  <li><code>pygame.event.get()</code>: Handles incoming events in the loop.</li>
+                  <li><code>pygame.draw.rect()</code>: Used to draw the game's UI components.</li>
+                </ul>
+                </code></pre>
+              </section>
+            </div>
+          </div>
+          <footer>
+            <div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+              <a href="Modules_Description.html" class="btn btn-neutral float-left" title="Modules description" rel="prev">
+                <span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous
+              </a>
+              <a href="Interfaces.html" class="btn btn-neutral float-right" title="Interfaces" rel="next">
+                Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span>
+              </a>
+            </div>
+            <hr/>
+            <div role="contentinfo">
+              <p>© Copyright 2024, Erik Diegel.</p>
+            </div>
+            <p>Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a theme provided by <a href="https://readthedocs.org">Read the Docs</a>.</p>
+          </footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+    });
+  </script>
+</body>
+</html>

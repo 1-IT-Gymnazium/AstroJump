@@ -86,10 +86,12 @@ class Game:
         :param int x: The x-coordinate of the text position.
         :param int y: The y-coordinate of the text position.
         """
-
-        text_obj = font.render(text, True, color)
-        text_rect = text_obj.get_rect(center=(x, y))
-        self.screen.blit(text_obj, text_rect)
+        try:
+            text_obj = font.render(text, True, color)
+            text_rect = text_obj.get_rect(center=(x, y))
+            self.screen.blit(text_obj, text_rect)
+        except Exception as e:
+            print(f"Error drawing text: {e}")
 
     def draw_button(self, text, rect, color):
         """
@@ -99,267 +101,290 @@ class Game:
         :param Rect rect: A pygame Rect object representing the button's position and dimensions.
         :param tuple color: A tuple representing the RGB color of the button.
         """
-
-        pygame.draw.rect(self.screen, color, rect, border_radius=30)
-        text_surface = self.font_custom.render(text, True, self.white)
-        text_rect = text_surface.get_rect(center=rect.center)
-        self.screen.blit(text_surface, text_rect)
+        try:
+            pygame.draw.rect(self.screen, color, rect, border_radius=30)
+            text_surface = self.font_custom.render(text, True, self.white)
+            text_rect = text_surface.get_rect(center=rect.center)
+            self.screen.blit(text_surface, text_rect)
+        except Exception as e:
+            print(f"Error drawing button: {e}")
 
     def main_menu(self):
         """
         Handles the main menu loop, processing events and updating the display.
         """
+        try:
+            while True:
+                bg = pygame.image.load("Graphics/backgrounds/BG.png")
+                self.screen.blit(bg, (0, 0))
 
-        while True:
-            bg = pygame.image.load("Graphics/backgrounds/BG.png")
-            self.screen.blit(bg, (0, 0))
+                self.draw_text("Astro Jump", self.font_custom, self.white,
+                               WINDOW_WIDTH // 2, 300)
 
-            self.draw_text("Astro Jump", self.font_custom, self.white,
-                           WINDOW_WIDTH // 2, 300)
+                mx, my = pygame.mouse.get_pos()
 
-            mx, my = pygame.mouse.get_pos()
+                play_button = (
+                    pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 400,
+                                BUTTON_WIDTH, BUTTON_HEIGHT))
+                tutorial_button = (
+                    pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 500,
+                                BUTTON_WIDTH, BUTTON_HEIGHT))
+                settings_button = (
+                    pygame.Rect( WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600,
+                                 BUTTON_WIDTH, BUTTON_HEIGHT))
+                quit_button = (
+                    pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                700, BUTTON_WIDTH, BUTTON_HEIGHT))
 
-            play_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
-                                      400, BUTTON_WIDTH, BUTTON_HEIGHT)
-            tutorial_button = pygame.Rect(
-                WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 500, BUTTON_WIDTH,
-                BUTTON_HEIGHT)
-            settings_button = pygame.Rect(
-                WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2, 600, BUTTON_WIDTH,
-                BUTTON_HEIGHT)
-            quit_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
-                                      700, BUTTON_WIDTH, BUTTON_HEIGHT)
+                play_hovered = play_button.collidepoint((mx, my))
+                tutorial_hovered = tutorial_button.collidepoint((mx, my))
+                settings_hovered = settings_button.collidepoint((mx, my))
+                quit_hovered = quit_button.collidepoint((mx, my))
 
-            play_hovered = play_button.collidepoint((mx, my))
-            tutorial_hovered = tutorial_button.collidepoint((mx, my))
-            settings_hovered = settings_button.collidepoint((mx, my))
-            quit_hovered = quit_button.collidepoint((mx, my))
+                self.draw_button("Play", play_button,
+                                 self.hover_color if play_hovered else
+                                 self.button_color)
+                self.draw_button("Tutorial", tutorial_button,
+                                 self.hover_color if tutorial_hovered else
+                                 self.button_color)
+                self.draw_button("Settings", settings_button,
+                                 self.hover_color if settings_hovered else
+                                 self.button_color)
+                self.draw_button("Quit Game", quit_button,
+                                 self.quit_button_hover_color if quit_hovered
+                                 else self.quit_button_color)
 
-            self.draw_button("Play", play_button,
-                             self.hover_color if play_hovered else
-                             self.button_color)
-            self.draw_button("Tutorial", tutorial_button,
-                             self.hover_color if tutorial_hovered else
-                             self.button_color)
-            self.draw_button("Settings", settings_button,
-                             self.hover_color if settings_hovered else
-                             self.button_color)
-            self.draw_button("Quit Game", quit_button,
-                             self.quit_button_hover_color if quit_hovered else
-                             self.quit_button_color)
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
-                if play_button.collidepoint((mx, my)):
-                    if pygame.mouse.get_pressed()[0]:
-                        self.button_sound.play()
-                        self.level_select()
-
-                if tutorial_button.collidepoint((mx, my)):
-                    if pygame.mouse.get_pressed()[0]:
-                        self.button_sound.play()
-                        self.tutorial()
-
-                if settings_button.collidepoint((mx, my)):
-                    if pygame.mouse.get_pressed()[0]:
-                        self.button_sound.play()
-                        self.settings()
-
-                if quit_button.collidepoint((mx, my)):
-                    if pygame.mouse.get_pressed()[0]:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
 
-            pygame.display.update()
+                    if play_button.collidepoint((mx, my)):
+                        if pygame.mouse.get_pressed()[0]:
+                            self.button_sound.play()
+                            self.level_select()
+
+                    if tutorial_button.collidepoint((mx, my)):
+                        if pygame.mouse.get_pressed()[0]:
+                            self.button_sound.play()
+                            self.tutorial()
+
+                    if settings_button.collidepoint((mx, my)):
+                        if pygame.mouse.get_pressed()[0]:
+                            self.button_sound.play()
+                            self.settings()
+
+                    if quit_button.collidepoint((mx, my)):
+                        if pygame.mouse.get_pressed()[0]:
+                            pygame.quit()
+                            sys.exit()
+
+                pygame.display.update()
+
+        except Exception as e:
+            print(f"An error occurred in the main menu: {e}")
+            pygame.quit()
+            sys.exit()
 
     def level_select(self):
         """
         Displays the level selection menu and handles level loading based on user interaction.
         """
+        try:
+            while True:
+                level_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
+                self.screen.blit(level_bg, (0, 0))
 
-        while True:
-            level_bg = pygame.image.load("Graphics/backgrounds/Level_BG.png")
-            self.screen.blit(level_bg, (0, 0))
+                self.draw_text("Select a Level", self.font_custom, self.white,
+                               WINDOW_WIDTH // 2, 175)
 
-            self.draw_text("Select a Level", self.font_custom, self.white,
-                           WINDOW_WIDTH // 2, 175)
+                mx, my = pygame.mouse.get_pos()
 
-            mx, my = pygame.mouse.get_pos()
+                return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                            800, BUTTON_WIDTH, BUTTON_HEIGHT)
+                level1 = pygame.Rect(
+                    (WINDOW_WIDTH - 3 * BUTTON_WIDTH - 2 * BUTTON_GAP) // 2, 250,
+                    BUTTON_WIDTH, BUTTON_HEIGHT)
+                level2 = pygame.Rect(level1.right + BUTTON_GAP, 250, BUTTON_WIDTH,
+                                     BUTTON_HEIGHT)
+                level3 = pygame.Rect(level2.right + BUTTON_GAP, 250, BUTTON_WIDTH,
+                                     BUTTON_HEIGHT)
 
-            return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
-                                        800, BUTTON_WIDTH, BUTTON_HEIGHT)
-            level1 = pygame.Rect(
-                (WINDOW_WIDTH - 3 * BUTTON_WIDTH - 2 * BUTTON_GAP) // 2, 250,
-                BUTTON_WIDTH, BUTTON_HEIGHT)
-            level2 = pygame.Rect(level1.right + BUTTON_GAP, 250, BUTTON_WIDTH,
-                                 BUTTON_HEIGHT)
-            level3 = pygame.Rect(level2.right + BUTTON_GAP, 250, BUTTON_WIDTH,
-                                 BUTTON_HEIGHT)
+                return_hovered = return_button.collidepoint((mx, my))
+                level1_hovered = level1.collidepoint((mx, my))
+                level2_hovered = level2.collidepoint((mx, my))
+                level3_hovered = level3.collidepoint((mx, my))
 
-            return_hovered = return_button.collidepoint((mx, my))
-            level1_hovered = level1.collidepoint((mx, my))
-            level2_hovered = level2.collidepoint((mx, my))
-            level3_hovered = level3.collidepoint((mx, my))
+                self.draw_button("Return", return_button,
+                                 self.hover_color if return_hovered else
+                                 self.button_color)
+                self.draw_button("Level 1", level1,
+                                 self.hover_color if level1_hovered else
+                                 self.button_color)
+                self.draw_button("Level 2", level2,
+                                 self.hover_color if level2_hovered else
+                                 self.button_color)
+                self.draw_button("Level 3", level3,
+                                 self.hover_color if level3_hovered else
+                                 self.button_color)
 
-            self.draw_button("Return", return_button,
-                             self.hover_color if return_hovered else
-                             self.button_color)
-            self.draw_button("Level 1", level1,
-                             self.hover_color if level1_hovered else
-                             self.button_color)
-            self.draw_button("Level 2", level2,
-                             self.hover_color if level2_hovered else
-                             self.button_color)
-            self.draw_button("Level 3", level3,
-                             self.hover_color if level3_hovered else
-                             self.button_color)
+                if level1.collidepoint((mx, my)):
+                    if pygame.mouse.get_pressed()[0]:
+                        self.button_sound.play()
+                        circular_fade(self.screen, 'out')
+                        pygame.mixer.music.load(self.bg_level_music)
+                        pygame.mixer.music.play(-1)
+                        self.show_map("levels/level1.csv")
 
-            if level1.collidepoint((mx, my)):
-                if pygame.mouse.get_pressed()[0]:
-                    self.button_sound.play()
-                    circular_fade(self.screen, 'out')
-                    pygame.mixer.music.load(self.bg_level_music)
-                    pygame.mixer.music.play(-1)
-                    self.show_map("levels/level1.csv")
+                if level2.collidepoint((mx, my)):
+                    if pygame.mouse.get_pressed()[0]:
+                        self.button_sound.play()
+                        circular_fade(self.screen, 'out')
+                        pygame.mixer.music.load(self.bg_level_music)
+                        pygame.mixer.music.play(-1)
+                        self.show_map("levels/level2.csv")
 
-            if level2.collidepoint((mx, my)):
-                if pygame.mouse.get_pressed()[0]:
-                    self.button_sound.play()
-                    circular_fade(self.screen, 'out')
-                    pygame.mixer.music.load(self.bg_level_music)
-                    pygame.mixer.music.play(-1)
-                    self.show_map("levels/level2.csv")
-
-            if level3.collidepoint((mx, my)):
-                if pygame.mouse.get_pressed()[0]:
-                    self.button_sound.play()
-                    circular_fade(self.screen, 'out')
-                    pygame.mixer.music.load(self.bg_level_music)
-                    pygame.mixer.music.play(-1)
-                    self.show_map("levels/level3.csv")
-
-            if return_button.collidepoint((mx, my)):
-                if pygame.mouse.get_pressed()[0]:
-                    self.button_sound.play()
-                    return
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        return
-
-            pygame.display.update()
-
-    def tutorial(self):
-        """
-        Displays the tutorial screen and handles interactions within the tutorial.
-        """
-
-        while True:
-            tutorial_bg = pygame.image.load(
-                "Graphics/backgrounds/Level_BG.png")
-            self.screen.blit(tutorial_bg, (0, 0))
-
-            mx, my = pygame.mouse.get_pos()
-
-            return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
-                                        900, BUTTON_WIDTH, BUTTON_HEIGHT)
-            page1 = pygame.Rect((WINDOW_WIDTH // 2) - 250, 300, 500, 400)
-
-            return_hovered = return_button.collidepoint((mx, my))
-
-            self.draw_button("Return", return_button,
-                             self.hover_color if return_hovered else
-                             self.button_color)
-            pygame.draw.rect(self.screen, self.button_color, page1,
-                             border_radius=30)
-
-            self.draw_text("Tutorial", self.font_custom, self.white,
-                           WINDOW_WIDTH // 2, 175)
-            self.draw_text("Return", self.font_custom, self.white,
-                           return_button.centerx, return_button.centery)
-            self.draw_text("A - move left", self.font_custom, self.white,
-                           page1.centerx, 350)
-            self.draw_text("D - move right", self.font_custom, self.white,
-                           page1.centerx, 450)
-            self.draw_text("Space - jump", self.font_custom, self.white,
-                           page1.centerx, 550)
-
-            if return_button.collidepoint((mx, my)):
-                if pygame.mouse.get_pressed()[0]:
-                    self.button_sound.play()
-                    return
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        return
-
-            pygame.display.update()
-
-    def settings(self):
-        """
-        Displays the settings menu where users can adjust preferences like sound volume.
-        """
-
-        while True:
-            tutorial_bg = pygame.image.load(
-                "Graphics/backgrounds/Level_BG.png")
-            self.screen.blit(tutorial_bg, (0, 0))
-
-            mx, my = pygame.mouse.get_pos()
-
-            return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
-                                        900, BUTTON_WIDTH, BUTTON_HEIGHT)
-
-            return_hovered = return_button.collidepoint((mx, my))
-
-            self.draw_button("Return", return_button,
-                             self.hover_color if return_hovered else
-                             self.button_color)
-            self.draw_text("Settings", self.font_custom, self.white,
-                           WINDOW_WIDTH // 2, 175)
-            self.draw_text("SFX volume", self.font_custom, self.white,
-                           WINDOW_WIDTH // 2, 350)
-            self.draw_text("Music volume", self.font_custom, self.white,
-                           WINDOW_WIDTH // 2, 650)
-
-            self.sfx_slider.draw(self.screen)
-            self.music_slider.draw(self.screen)
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
-                self.sfx_slider.handle_event(event, mx, my)
-                self.music_slider.handle_event(event, mx, my)
-
-                if event.type == pygame.MOUSEBUTTONUP:
-                    self.button_sound.set_volume(self.sfx_slider.value)
-                    pygame.mixer.music.set_volume(self.music_slider.value)
+                if level3.collidepoint((mx, my)):
+                    if pygame.mouse.get_pressed()[0]:
+                        self.button_sound.play()
+                        circular_fade(self.screen, 'out')
+                        pygame.mixer.music.load(self.bg_level_music)
+                        pygame.mixer.music.play(-1)
+                        self.show_map("levels/level3.csv")
 
                 if return_button.collidepoint((mx, my)):
                     if pygame.mouse.get_pressed()[0]:
                         self.button_sound.play()
                         return
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            return
+
+                pygame.display.update()
+        except Exception as e:
+            print(f"An error occurred in the Level selection menu: {e}")
+            pygame.quit()
+            sys.exit()
+
+    def tutorial(self):
+        """
+        Displays the tutorial screen and handles interactions within the tutorial.
+        """
+
+        try:
+            while True:
+                tutorial_bg = pygame.image.load(
+                    "Graphics/backgrounds/Level_BG.png")
+                self.screen.blit(tutorial_bg, (0, 0))
+
+                mx, my = pygame.mouse.get_pos()
+
+                return_button = pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                            900, BUTTON_WIDTH, BUTTON_HEIGHT)
+                page1 = pygame.Rect((WINDOW_WIDTH // 2) - 250, 300, 500, 400)
+
+                return_hovered = return_button.collidepoint((mx, my))
+
+                self.draw_button("Return", return_button,
+                                 self.hover_color if return_hovered else
+                                 self.button_color)
+                pygame.draw.rect(self.screen, self.button_color, page1,
+                                 border_radius=30)
+
+                self.draw_text("Tutorial", self.font_custom, self.white,
+                               WINDOW_WIDTH // 2, 175)
+                self.draw_text("Return", self.font_custom, self.white,
+                               return_button.centerx, return_button.centery)
+                self.draw_text("A - move left", self.font_custom, self.white,
+                               page1.centerx, 350)
+                self.draw_text("D - move right", self.font_custom, self.white,
+                               page1.centerx, 450)
+                self.draw_text("Space - jump", self.font_custom, self.white,
+                               page1.centerx, 550)
+
+                if return_button.collidepoint((mx, my)):
+                    if pygame.mouse.get_pressed()[0]:
+                        self.button_sound.play()
                         return
 
-            pygame.display.update()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            return
+
+                pygame.display.update()
+        except Exception as e:
+            print(f"An error occurred in the tutorial: {e}")
+            pygame.quit()
+            sys.exit()
+
+    def settings(self):
+        """
+        Displays the settings menu where users can adjust preferences like sound volume.
+        """
+        try:
+            while True:
+                tutorial_bg = pygame.image.load(
+                    "Graphics/backgrounds/Level_BG.png")
+                self.screen.blit(tutorial_bg, (0, 0))
+
+                mx, my = pygame.mouse.get_pos()
+
+                return_button = (
+                    pygame.Rect(WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2,
+                                900, BUTTON_WIDTH, BUTTON_HEIGHT))
+
+                return_hovered = return_button.collidepoint((mx, my))
+
+                self.draw_button("Return", return_button,
+                                 self.hover_color if return_hovered else
+                                 self.button_color)
+                self.draw_text("Settings", self.font_custom, self.white,
+                               WINDOW_WIDTH // 2, 175)
+                self.draw_text("SFX volume", self.font_custom, self.white,
+                               WINDOW_WIDTH // 2, 350)
+                self.draw_text("Music volume", self.font_custom, self.white,
+                               WINDOW_WIDTH // 2, 650)
+
+                self.sfx_slider.draw(self.screen)
+                self.music_slider.draw(self.screen)
+
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+
+                    self.sfx_slider.handle_event(event, mx, my)
+                    self.music_slider.handle_event(event, mx, my)
+
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        self.button_sound.set_volume(self.sfx_slider.value)
+                        pygame.mixer.music.set_volume(self.music_slider.value)
+
+                    if return_button.collidepoint((mx, my)):
+                        if pygame.mouse.get_pressed()[0]:
+                            self.button_sound.play()
+                            return
+
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            return
+
+                pygame.display.update()
+        except Exception as e:
+            print(f"An error occurred in the settings menu: {e}")
+            pygame.quit()
+            sys.exit()
 
     def show_respawn_menu(self):
         """

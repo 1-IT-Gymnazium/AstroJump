@@ -5,31 +5,37 @@
 
 import os
 import sys
-
-sys.path.insert(0, os.path.abspath('../../AstroJump'))
-
+sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'AstroJump'
 copyright = '2024, Erik Diegel'
 author = 'Erik Diegel'
-release = '0.0.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon'
-]
+extensions = ['rst2pdf.pdfbuilder',
+              'sphinx.ext.autodoc',
+              'sphinx.ext.viewcode',
+              'sphinx.ext.napoleon'
+              ]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
+
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+
+
+# PDF options
+pdf_documents = [('index', u'AstroJump', u'AstroJump Documentation', u'Erik Diegel')]
+pdf_stylesheets = ['sphinx', "serif", "a4"]
+pdf_language = "en"
+pdf_fit_background_mode = 'scale'

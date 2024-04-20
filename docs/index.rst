@@ -1,9 +1,9 @@
 .. AstroJump documentation master file, created by
-   sphinx-quickstart on Tue Apr 16 22:47:21 2024.
+   sphinx-quickstart on Thu Apr 18 21:12:19 2024.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to AstroJump's documentation!
+
 =====================================
 
 .. toctree::
@@ -11,7 +11,6 @@ Welcome to AstroJump's documentation!
    :caption: Contents:
 
    modules
-
 
 
 Indices and tables
