@@ -4,7 +4,7 @@ Welcome to the GitHub repository for my game **Astro Jump**, an action packed, 2
 
 ### Installation
 
-1. Download `AstroJump.zip` from the releases section.
+1. Download `AstroJumpEXE.zip` from the releases section.
 2. Unzip the contents into a file.
 3. Install the necessary dependencies.
 4. Click the AstroJump.exe and enjoy!!
